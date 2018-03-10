@@ -3,6 +3,7 @@ package state
 import (
 	"jobShop/util"
 	. "jobShop/base"
+	"fmt"
 )
 
 type State struct {
@@ -14,7 +15,32 @@ type State struct {
 
 	LeftTotalTime JobsTotalTime
 
-	Parent *State
+	Parent   *State
+	redoData redoData
+}
+
+type redoData struct {
+	machine                                                          Machine
+	job, task, jobTimeWave, machineTimeWave, leftTotalTime, executed int
+}
+
+func (rd *redoData) deconstruct() (job, task int, machine Machine, jobTimeWave, machineTimeWave, leftTotalTime, executed int) {
+	return rd.job, rd.task, rd.machine, rd.jobTimeWave, rd.machineTimeWave, rd.leftTotalTime, rd.executed
+}
+
+func (s *State) saveForRedo(job int, task int) {
+	machine, _ := s.Jobs[job][task].Deconstruct()
+
+	s.redoData = redoData{
+		job:     job,
+		task:    task,
+		machine: machine,
+
+		jobTimeWave:     s.JobTimeWave[job],
+		machineTimeWave: s.MachineTimeWave[machine],
+		leftTotalTime:   s.LeftTotalTime[job],
+		executed:        s.Executed[job],
+	}
 }
 
 func NewState(jobs Jobs) State {
@@ -50,9 +76,21 @@ func (s State) updateTimeWave(job, task int) {
 	s.LeftTotalTime[job] -= time
 }
 
-func (s State) Execute(job, task int) {
+func (s *State) Execute(job, task int) {
+	s.saveForRedo(job, task)
+
 	s.updateTimeWave(job, task)
 	s.Executed[job]++
+}
+
+func (s *State) Undo() {
+	job, _, machine,
+	jobTimeWave, machineTimeWave, leftTotalTime, executed := s.redoData.deconstruct()
+
+	s.JobTimeWave[job] = jobTimeWave
+	s.MachineTimeWave[machine] = machineTimeWave
+	s.LeftTotalTime[job] = leftTotalTime
+	s.Executed[job] = executed
 }
 
 func (s State) NextTaskIndexOf(job int) (int, bool) {
@@ -97,10 +135,10 @@ func (s State) EstimateTime() (min, max int) {
 func (s State) IsFinish() bool {
 	return s.Executed.IsExecutedAll(s.Jobs)
 }
-
 func (s State) Makespan() int {
 	min, max := s.EstimateTime()
 	if min != max {
+		fmt.Println(s)
 		panic("scheduling not finished yet")
 	}
 
