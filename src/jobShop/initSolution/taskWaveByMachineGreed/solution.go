@@ -63,22 +63,6 @@ func (s Resolver) GreedChoice(tasks TaskInfoSet) Resolver {
 	return *best
 }
 
-//func (s Resolver) FindSolution() State {
-//	var (
-//		currentState Resolver
-//		//prev         *State
-//	)
-//
-//	for currentState = s; !currentState.IsFinish(); currentState = currentState.Next() {
-//		//fmt.Println(currentState)
-//		//currentState.Parent = prev
-//	}
-//
-//	//fmt.Println(currentState)
-//
-//	return currentState
-//}
-
 func (s Resolver) FindSolution() base.Scheduler {
 	var currentState Resolver
 

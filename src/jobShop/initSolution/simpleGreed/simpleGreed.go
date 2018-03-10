@@ -53,15 +53,22 @@ func (r *Resolver) Next() Resolver {
 
 func (resolver *Resolver) GreedChoice(tasks TaskWave) Resolver {
 	var best *Resolver
+	copy := resolver.Copy()
 
 	for job, task := range tasks {
-		newState := resolver.Copy()
 
-		newState.ExecuteBy(job, task)
+		resolver.ExecuteBy(job, task)
 
-		if best == nil || newState.IsBetterThan(*best) {
-			best = &newState
+		if best == nil {
+			best = &copy
+			best.ExecuteBy(job, task)
+		} else if resolver.IsBetterThan(*best) {
+			best.Undo()
+			best.ExecuteBy(job, task)
 		}
+
+		resolver.Undo()
+
 	}
 
 	return *best
