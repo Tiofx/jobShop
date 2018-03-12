@@ -31,8 +31,7 @@ func newNeighbour(graph DisjunctiveGraph, jobs base.Jobs) (newNeighbour *neighbo
 func (list tabuList) indexOf(neighbour neighbour) int {
 	for index, tabuNeighbour := range list {
 
-		//if tabuNeighbour.Makespan() == neighbour.Makespan() && reflect.DeepEqual(tabuNeighbour.jobState.JobOrder, neighbour.jobState.JobOrder) {
-		if reflect.DeepEqual(tabuNeighbour, neighbour) {
+		if tabuNeighbour.Makespan() == neighbour.Makespan() && reflect.DeepEqual(tabuNeighbour.jobState.JobOrder, neighbour.jobState.JobOrder) {
 			return index
 		}
 	}
