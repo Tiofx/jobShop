@@ -17,6 +17,7 @@ type State struct {
 
 	Parent   *State
 	redoData redoData
+	JobOrder []int
 }
 
 type redoData struct {
@@ -67,7 +68,7 @@ func (s State) endOf(job, task int) int {
 	return s.startTimeFor(job, task) + s.Jobs[job][task].Time
 }
 
-func (s State) updateTimeWave(job, task int) {
+func (s *State) updateTimeWave(job, task int) {
 	machine, time := s.Jobs[job][task].Deconstruct()
 	endOfCurrentTask := s.endOf(job, task)
 
@@ -81,6 +82,8 @@ func (s *State) Execute(job, task int) {
 
 	s.updateTimeWave(job, task)
 	s.Executed[job]++
+
+	s.JobOrder = append(s.JobOrder, job)
 }
 
 func (s *State) Undo() {
@@ -91,6 +94,8 @@ func (s *State) Undo() {
 	s.MachineTimeWave[machine] = machineTimeWave
 	s.LeftTotalTime[job] = leftTotalTime
 	s.Executed[job] = executed
+
+	s.JobOrder = s.JobOrder[:len(s.JobOrder)-1]
 }
 
 func (s State) NextTaskIndexOf(job int) (int, bool) {
@@ -126,7 +131,6 @@ func (s State) EstimateTime() (min, max int) {
 			maxEstimateOfJobEnd = minPossibleTimeOfEnd
 		}
 	}
-
 	min = maxEstimateOfJobEnd
 	max = maxTimeWave + totalLeftTime
 	return
