@@ -79,7 +79,7 @@ func (s *Solver) setUpBestNeighbour() (isBestSolutionChanged bool) {
 		}
 	}
 
-	if s.bestLocal.Makespan() < s.BestMakespan() {
+	if s.bestLocal != nil && s.bestLocal.Makespan() < s.BestMakespan() {
 		isBestSolutionChanged = true
 		s.bestSolution = s.bestLocal
 		s.bestLocal = nil
@@ -93,6 +93,8 @@ func (s *Solver) Next() {
 	s.CurrentSolution.copyIn(&current)
 
 	isBestSolutionChanged := s.setUpBestNeighbour()
+
+	//fmt.Println(s.BestMakespan(), " ", s.BestLocalMakespan())
 
 	if !isBestSolutionChanged {
 		s.tabuList = append(s.tabuList, current)
