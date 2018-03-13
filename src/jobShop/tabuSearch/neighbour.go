@@ -4,7 +4,8 @@ import (
 	"jobShop/state"
 	"jobShop/base"
 	"sort"
-	"reflect"
+	"github.com/getlantern/deepcopy"
+	"jobShop/util"
 )
 
 type neighbour struct {
@@ -16,6 +17,21 @@ type neighbour struct {
 type neighboursSet []neighbour
 
 type tabuList neighboursSet
+
+func (n *neighbour) updateByGraph() (success bool) {
+	jobState, exist := n.graph.To(n.jobState.Jobs)
+
+	if !exist {
+		return false
+	}
+
+	n.jobState = *jobState
+	return true
+}
+
+func (n *neighbour) updateByState() {
+
+}
 
 func newNeighbour(graph DisjunctiveGraph, jobs base.Jobs) (newNeighbour *neighbour, exist bool) {
 	if state, exist := graph.To(jobs); exist {
@@ -31,60 +47,43 @@ func newNeighbour(graph DisjunctiveGraph, jobs base.Jobs) (newNeighbour *neighbo
 func (list tabuList) indexOf(neighbour neighbour) int {
 	for index, tabuNeighbour := range list {
 
-		if tabuNeighbour.Makespan() == neighbour.Makespan() && reflect.DeepEqual(tabuNeighbour.jobState.JobOrder, neighbour.jobState.JobOrder) {
+		//if tabuNeighbour.Makespan() == neighbour.Makespan() && reflect.DeepEqual(tabuNeighbour.jobState.JobOrder, neighbour.jobState.JobOrder) {
+		if tabuNeighbour.Makespan() == neighbour.Makespan() && util.CompareIntSlices(tabuNeighbour.jobState.JobOrder, neighbour.jobState.JobOrder) {
 			return index
 		}
 	}
 
 	return -1
-	//return sort.Search(len(list), func(i int) bool {
-	//	return reflect.DeepEqual(list[i].graph, neighbour.graph)
-	//})
 }
 
 func (list tabuList) contain(neighbour neighbour) bool {
 	return list.indexOf(neighbour) != -1
 }
 
-func (ns neighboursSet) getNextElement(list tabuList) (n *neighbour, exist bool) {
-	for _, neighbour := range ns {
-		if len(list) == 0 || !list.contain(neighbour) {
-			return &neighbour, true
-		}
-	}
+type move struct{ machine, i, j int }
 
-	//if len(list) > 0 {
-	//	return &list[0], true
-	//}
-
-	return nil, false
+func (m *move) deconstruct() (machine, i, j int) {
+	return m.machine, m.i, m.j
 }
 
-func createNeighboursWithoutTabu(graphs []DisjunctiveGraph, jobs base.Jobs, tabu tabuList) (res neighboursSet) {
-	neighbours := createExistingNeighbours(graphs, jobs)
+func (n *neighbour) apply(move move) {
+	machine, i, j := move.deconstruct()
+	n.graph[machine][i], n.graph[machine][j] = n.graph[machine][j], n.graph[machine][i]
+}
 
-	for _, neighbour := range neighbours {
-		if tabu.contain(neighbour) {
-			continue
-		}
-		res = append(res, neighbour)
-	}
-
+func (n *neighbour) copy() (res neighbour) {
+	deepcopy.Copy(&res, n)
 	return
 }
 
-func createExistingNeighbours(graphs []DisjunctiveGraph, jobs base.Jobs) (res neighboursSet) {
-	for _, graph := range graphs {
-		if newNeighbour, exist := newNeighbour(graph, jobs); exist {
-			res = append(res, *newNeighbour)
-		}
-	}
-
-	return
+func (n *neighbour) copyIn(in *neighbour) {
+	//deepcopy.Copy(&in, &n)
+	deepcopy.Copy(&in.jobState, &n.jobState)
+	deepcopy.Copy(&in.graph, &n.graph)
 }
 
-func (ns *neighboursSet) descendingOrder() {
-	sort.Sort(sort.Reverse(ns))
+func (n *neighbour) redo(move move) {
+	n.apply(move)
 }
 
 func (ns neighboursSet) Len() int {

@@ -23,7 +23,8 @@ type State struct {
 }
 
 func neighbours() {}
-func move()       {}
+
+//func move()       {}
 
 func (s State) ExecuteNextOf(machine base.Machine) {
 	s.Executed[machine]++
@@ -49,39 +50,7 @@ func From(state state.State) (graph DisjunctiveGraph) {
 		graph.AddTo(task.Machine, job)
 		currentTaskNumber[job]++
 	}
-	//
-	//criticalJob := criticalJob(state)
-	//positionFor := graph.criticalTaskPositionFor(criticalJob)
 
-	//var (
-	//	BestMakespan = math.MaxInt64
-	//	bestSheduler DisjunctiveGraph
-	//)
-	//
-	//neighbours := createExistingNeighbours(graph.neighbours(positionFor), state.Jobs)
-	//neighbours.descendingOrder()
-	//
-	//for _, n := range neighbours {
-	//	fmt.Println(n.Makespan())
-	//}
-
-	//for _, graph := range graph.neighbours(positionFor) {
-	//	if jobState, exist := graph.To(state.Jobs); exist {
-	//		if orderMakespan := jobState.Makespan(); orderMakespan < BestMakespan {
-	//			bestSheduler = graph
-	//			BestMakespan = orderMakespan
-	//		}
-	//
-	//		//fmt.Println(graph)
-	//		//fmt.Println(i, ": ", jobState.Makespan())
-	//	}
-	//}
-	//
-	//fmt.Println("makespan before: ", state.Makespan())
-	//fmt.Println("makespan after: ", BestMakespan)
-	//fmt.Println(bestSheduler)
-
-	//graph = bestSheduler
 	return
 }
 
