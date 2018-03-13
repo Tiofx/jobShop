@@ -4,7 +4,6 @@ import (
 	"jobShop/base"
 	"jobShop/state"
 	"math"
-	"github.com/getlantern/deepcopy"
 )
 
 type Solver struct {

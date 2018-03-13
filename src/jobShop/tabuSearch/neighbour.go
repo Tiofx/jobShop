@@ -3,7 +3,6 @@ package tabuSearch
 import (
 	"jobShop/state"
 	"jobShop/base"
-	"sort"
 	"github.com/getlantern/deepcopy"
 	"jobShop/util"
 )
