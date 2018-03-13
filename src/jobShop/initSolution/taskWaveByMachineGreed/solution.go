@@ -18,7 +18,7 @@ func (s *Resolver) Copy() Resolver {
 	return Resolver{s.State.Copy()}
 }
 
-func (s Resolver) ExecuteByTaskInfo(info TaskInfo) {
+func (s *Resolver) ExecuteByTaskInfo(info TaskInfo) {
 	taskPosition := s.Executed[info.Job]
 	s.Execute(info.Job, taskPosition)
 }
