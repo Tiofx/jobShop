@@ -3,7 +3,6 @@ package tabuSearch
 import (
 	"jobShop/state"
 	"jobShop/base"
-	"github.com/getlantern/deepcopy"
 )
 
 type job int
@@ -93,7 +92,7 @@ func (graph DisjunctiveGraph) To(jobs base.Jobs) (jobState *state.State, exist b
 	jobNumber := len(jobState.Jobs)
 
 	for !jobState.IsFinish() {
-		isNotExecutedTaskDueIteration := true
+		hasNoExecutedTaskDueIteration := true
 
 		for job := 0; job < jobNumber; job++ {
 			if task, ok := jobState.NextTaskOf(job); ok {
@@ -103,12 +102,12 @@ func (graph DisjunctiveGraph) To(jobs base.Jobs) (jobState *state.State, exist b
 
 					stateOfGraph.ExecuteNextOf(task.Machine)
 
-					isNotExecutedTaskDueIteration = false
+					hasNoExecutedTaskDueIteration = false
 				}
 			}
 		}
 
-		if isNotExecutedTaskDueIteration {
+		if hasNoExecutedTaskDueIteration {
 			return nil, false
 		}
 	}
