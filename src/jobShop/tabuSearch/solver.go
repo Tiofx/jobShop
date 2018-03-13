@@ -33,14 +33,18 @@ func (s *Solver) BestMakespan() int {
 
 func NewSolver(state state.State) Solver {
 	initialSolution := From(state)
-	best, _ := newNeighbour(initialSolution, state.Jobs)
+	//best, _ := newNeighbour(initialSolution, state.Jobs)
+	best := neighbour{
+		jobState: state,
+		graph:    initialSolution,
+	}
 
 	var bestCopy neighbour
 	best.copyIn(&bestCopy)
 
 	return Solver{
 		jobs:            state.Jobs,
-		CurrentSolution: best,
+		CurrentSolution: &best,
 		bestSolution:    &bestCopy,
 	}
 }
@@ -89,6 +93,7 @@ func (s *Solver) setUpBestNeighbour() (isBestSolutionChanged bool) {
 }
 
 func (s *Solver) Next() {
+	//fmt.Println(s.CurrentSolution.jobState.JobOrder)
 	var current neighbour
 	s.CurrentSolution.copyIn(&current)
 

@@ -2,7 +2,6 @@ package tabuSearch
 
 import (
 	"jobShop/state"
-	"jobShop/base"
 	"github.com/getlantern/deepcopy"
 	"jobShop/util"
 )
@@ -11,6 +10,8 @@ type neighbour struct {
 	jobState state.State
 	graph    DisjunctiveGraph
 	cycle    int
+
+	graphState *State
 }
 
 type neighboursSet []neighbour
@@ -18,30 +19,25 @@ type neighboursSet []neighbour
 type tabuList neighboursSet
 
 func (n *neighbour) updateByGraph() (success bool) {
-	jobState, exist := n.graph.To(n.jobState.Jobs)
+	n.jobState.Reset()
 
-	if !exist {
-		return false
+	if n.graphState == nil {
+		newState := NewState(n.jobState.Jobs, n.graph)
+		n.graphState = &newState
+	} else {
+		n.graphState.DisjunctiveGraph = n.graph
+		n.graphState.Jobs = n.jobState.Jobs
+		util.FillIntsWith(n.graphState.Executed, 0)
 	}
 
-	n.jobState = *jobState
-	return true
+	success = n.graphState.To(&n.jobState)
+
+	return
 }
 
-func (n *neighbour) updateByState() {
-
-}
-
-func newNeighbour(graph DisjunctiveGraph, jobs base.Jobs) (newNeighbour *neighbour, exist bool) {
-	if state, exist := graph.To(jobs); exist {
-		return &neighbour{
-			jobState: *state,
-			graph:    graph,
-		}, true
-	}
-
-	return nil, false
-}
+//func (n *neighbour) updateByState() {
+//
+//}
 
 func (list tabuList) indexOf(neighbour neighbour) int {
 	for index, tabuNeighbour := range list {

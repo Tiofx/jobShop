@@ -2,7 +2,6 @@ package simpleGreed
 
 import (
 	"jobShop/state"
-	"jobShop/base"
 )
 
 type job int
@@ -74,12 +73,12 @@ func (resolver *Resolver) GreedChoice(tasks TaskWave) Resolver {
 	return *best
 }
 
-func (s Resolver) FindSolution() base.Scheduler {
+func (s Resolver) FindSolution() state.State {
 	var currentState Resolver
 
 	for currentState = s; !currentState.IsFinish(); currentState = currentState.Next() {
 
 	}
 
-	return currentState
+	return currentState.State
 }

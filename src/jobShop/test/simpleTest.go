@@ -30,7 +30,7 @@ func SimpleTest() {
 
 	newState := state.NewState(jobs)
 	solution := simpleGreed.Resolver{State: newState}.FindSolution()
-	resultState := solution.(simpleGreed.Resolver).State
+	resultState := solution
 
 	solver := tabuSearch.NewSolver(resultState)
 	for i := 0; i < 100; i++ {

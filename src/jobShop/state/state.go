@@ -148,10 +148,10 @@ func (s *State) EstimateTime() (min, max int) {
 	return
 }
 
-func (s State) IsFinish() bool {
+func (s *State) IsFinish() bool {
 	return s.Executed.IsExecutedAll(s.Jobs)
 }
-func (s State) Makespan() int {
+func (s *State) Makespan() int {
 	min, max := s.EstimateTime()
 	if min != max {
 		fmt.Println(s)

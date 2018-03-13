@@ -21,27 +21,31 @@ type State struct {
 	DisjunctiveGraph
 }
 
-func neighbours() {}
+func NewState(jobs base.Jobs, graph DisjunctiveGraph) State {
+	return State{
+		Jobs:             jobs,
+		Executed:         make([]int, jobs.MachineNumber()),
+		DisjunctiveGraph: graph,
+	}
+}
 
-//func move()       {}
-
-func (s State) ExecuteNextOf(machine base.Machine) {
+func (s *State) ExecuteNextOf(machine base.Machine) {
 	s.Executed[machine]++
 }
 
-func (s State) NextOf(machine base.Machine) int {
+func (s *State) NextOf(machine base.Machine) int {
 	return int(s.DisjunctiveGraph[machine][s.Executed[machine]])
 }
 
-func (s State) Makespan() int {
-	return s.To().Makespan()
-}
+//func (s *State) Makespan() int {
+//	return s.To().Makespan()
+//}
 func (graph DisjunctiveGraph) AddTo(machine base.Machine, nextJob int) {
 	graph[machine] = append(graph[machine], job(nextJob))
 }
 
 func From(state state.State) (graph DisjunctiveGraph) {
-	graph = make(DisjunctiveGraph, len(state.Jobs.ToMachines()))
+	graph = make(DisjunctiveGraph, state.Jobs.MachineNumber())
 	currentTaskNumber := make([]int, len(state.Jobs))
 
 	for _, job := range state.JobOrder {
@@ -53,12 +57,11 @@ func From(state state.State) (graph DisjunctiveGraph) {
 	return
 }
 
-func (s State) To() (jobState state.State) {
-	jobState = state.NewState(s.Jobs)
+func (s *State) To(jobState *state.State) (success bool) {
 	jobNumber := len(jobState.Jobs)
 
 	for !jobState.IsFinish() {
-		isNotExecutedTaskDueIteration := true
+		hasNoExecutedTaskDueIteration := true
 
 		for job := 0; job < jobNumber; job++ {
 			if task, ok := jobState.NextTaskOf(job); ok {
@@ -68,49 +71,15 @@ func (s State) To() (jobState state.State) {
 
 					s.ExecuteNextOf(task.Machine)
 
-					isNotExecutedTaskDueIteration = false
-				}
-			}
-		}
-
-		if isNotExecutedTaskDueIteration {
-			panic("endless loop")
-		}
-	}
-
-	return
-}
-
-//Deprected
-func (graph DisjunctiveGraph) To(jobs base.Jobs) (jobState *state.State, exist bool) {
-	stateOfGraph := State{
-		Executed:         make([]int, len(graph)),
-		DisjunctiveGraph: graph,
-	}
-	newState := state.NewState(jobs)
-	jobState = &newState
-	jobNumber := len(jobState.Jobs)
-
-	for !jobState.IsFinish() {
-		hasNoExecutedTaskDueIteration := true
-
-		for job := 0; job < jobNumber; job++ {
-			if task, ok := jobState.NextTaskOf(job); ok {
-				if stateOfGraph.NextOf(task.Machine) == job {
-					taskIndex, _ := jobState.NextTaskIndexOf(job)
-					jobState.Execute(job, taskIndex)
-
-					stateOfGraph.ExecuteNextOf(task.Machine)
-
 					hasNoExecutedTaskDueIteration = false
 				}
 			}
 		}
 
 		if hasNoExecutedTaskDueIteration {
-			return nil, false
+			return false
 		}
 	}
 
-	return jobState, true
+	return true
 }

@@ -3,7 +3,6 @@ package taskWaveByMachineGreed
 import (
 	"jobShop/util"
 	. "jobShop/state"
-	"jobShop/base"
 )
 
 type Resolver struct {
@@ -63,12 +62,12 @@ func (s Resolver) GreedChoice(tasks TaskInfoSet) Resolver {
 	return *best
 }
 
-func (s Resolver) FindSolution() base.Scheduler {
+func (s Resolver) FindSolution() State {
 	var currentState Resolver
 
 	for currentState = s; !currentState.IsFinish(); currentState = currentState.Next() {
 
 	}
 
-	return currentState
+	return currentState.State
 }
