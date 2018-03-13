@@ -115,22 +115,3 @@ func (graph DisjunctiveGraph) To(jobs base.Jobs) (jobState *state.State, exist b
 
 	return jobState, true
 }
-func (graph DisjunctiveGraph) neighbours(tasks criticalTasks) (res []DisjunctiveGraph) {
-
-	for machine, tasksOfMachine := range tasks {
-		for _, task := range tasksOfMachine {
-			for taskIndex, _ := range graph[machine] {
-				if taskIndex != int(task) {
-					copy := make(DisjunctiveGraph, len(graph))
-
-					deepcopy.Copy(&copy, &graph)
-					copy[machine][taskIndex], copy[machine][task] = copy[machine][task], copy[machine][taskIndex]
-
-					res = append(res, copy)
-				}
-			}
-		}
-	}
-
-	return
-}
