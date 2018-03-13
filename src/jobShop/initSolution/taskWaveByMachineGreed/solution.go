@@ -3,7 +3,6 @@ package taskWaveByMachineGreed
 import (
 	"jobShop/util"
 	. "jobShop/state"
-	"jobShop/base"
 )
 
 type Resolver struct {
@@ -18,7 +17,7 @@ func (s *Resolver) Copy() Resolver {
 	return Resolver{s.State.Copy()}
 }
 
-func (s Resolver) ExecuteByTaskInfo(info TaskInfo) {
+func (s *Resolver) ExecuteByTaskInfo(info TaskInfo) {
 	taskPosition := s.Executed[info.Job]
 	s.Execute(info.Job, taskPosition)
 }
@@ -37,6 +36,9 @@ func (s Resolver) NextTaskWave() (tw TaskWave) {
 
 func (s *Resolver) Next() Resolver {
 	tasks := s.NextTaskWave().GetBiggest()
+	if len(tasks) > 5 {
+		tasks = tasks[:4]
+	}
 	nextSolution := s.GreedChoice(tasks)
 	nextSolution.Parent = &s.State
 
@@ -63,12 +65,12 @@ func (s Resolver) GreedChoice(tasks TaskInfoSet) Resolver {
 	return *best
 }
 
-func (s Resolver) FindSolution() base.Scheduler {
+func (s Resolver) FindSolution() State {
 	var currentState Resolver
 
 	for currentState = s; !currentState.IsFinish(); currentState = currentState.Next() {
 
 	}
 
-	return currentState
+	return currentState.State
 }

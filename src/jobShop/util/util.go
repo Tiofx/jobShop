@@ -19,8 +19,18 @@ func MinMax(arr []int) (min, max int) {
 	for _, v := range arr {
 		if v < min {
 			min = v
+		} else if v > max {
+			max = v
 		}
+	}
 
+	return
+}
+
+func MaxOf(arr []int) (max int) {
+	max = arr[0]
+
+	for _, v := range arr {
 		if v > max {
 			max = v
 		}
@@ -64,4 +74,28 @@ func Combination(upBound int) <-chan []int {
 	}(c)
 
 	return c
+}
+
+func CompareIntSlices(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+
+	if (a == nil) != (b == nil) {
+		return false
+	}
+
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+func FillIntsWith(a []int, value int) {
+	for i := range a {
+		a[i] = value
+	}
 }

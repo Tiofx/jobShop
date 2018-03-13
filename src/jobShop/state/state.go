@@ -3,7 +3,6 @@ package state
 import (
 	"jobShop/util"
 	. "jobShop/base"
-	"fmt"
 )
 
 type State struct {
@@ -18,6 +17,7 @@ type State struct {
 	Parent   *State
 	redoData redoData
 	JobOrder []int
+	makespan int
 }
 
 type redoData struct {
@@ -46,25 +46,38 @@ func (s *State) saveForRedo(job int, task int) {
 
 func NewState(jobs Jobs) State {
 	jobsNumber := len(jobs)
-	machineNumber := len(jobs.ToMachines())
 
 	return State{
 		Jobs:            jobs,
 		Executed:        make(NumberOfExecutedTasks, jobsNumber),
 		JobTimeWave:     make(JobTimeWave, jobsNumber),
-		MachineTimeWave: make(MachineTimeWave, machineNumber),
+		MachineTimeWave: make(MachineTimeWave, jobs.MachineNumber()),
 		LeftTotalTime:   NewJobsTotalTime(jobs),
 		Parent:          nil,
+		JobOrder:        make([]int, 0, jobs.TotalTaskNumber()),
 	}
 }
 
-func (s State) startTimeFor(job, task int) (startTime int) {
+func (s *State) Reset() {
+	util.FillIntsWith(s.Executed, 0)
+	util.FillIntsWith(s.JobTimeWave, 0)
+	util.FillIntsWith(s.MachineTimeWave, 0)
+	s.LeftTotalTime.SetUpBy(s.Jobs)
+
+	util.FillIntsWith(s.JobOrder, 0)
+	s.JobOrder = s.JobOrder[0:0]
+	s.redoData = redoData{}
+	s.makespan = 0
+	s.Parent = nil
+}
+
+func (s *State) startTimeFor(job, task int) (startTime int) {
 	machine := s.Jobs[job][task].Machine
 	startTime = util.Max(s.JobTimeWave[job], s.MachineTimeWave[machine])
 	return
 }
 
-func (s State) endOf(job, task int) int {
+func (s *State) endOf(job, task int) int {
 	return s.startTimeFor(job, task) + s.Jobs[job][task].Time
 }
 
@@ -98,7 +111,7 @@ func (s *State) Undo() {
 	s.JobOrder = s.JobOrder[:len(s.JobOrder)-1]
 }
 
-func (s State) NextTaskIndexOf(job int) (int, bool) {
+func (s *State) NextTaskIndexOf(job int) (int, bool) {
 	nextTaskIndex := s.Executed[job]
 	if nextTaskIndex >= len(s.Jobs[job]) {
 		return 0, false
@@ -107,7 +120,7 @@ func (s State) NextTaskIndexOf(job int) (int, bool) {
 	return nextTaskIndex, true
 }
 
-func (s State) NextTaskOf(job int) (*Task, bool) {
+func (s *State) NextTaskOf(job int) (*Task, bool) {
 	if nextTaskIndex, ok := s.NextTaskIndexOf(job); ok {
 		return &s.Jobs[job][nextTaskIndex], true
 
@@ -116,7 +129,7 @@ func (s State) NextTaskOf(job int) (*Task, bool) {
 	}
 }
 
-func (s State) EstimateTime() (min, max int) {
+func (s *State) EstimateTime() (min, max int) {
 	var maxEstimateOfJobEnd, totalLeftTime, maxTimeWave int
 
 	for job, currentTime := range s.JobTimeWave {
@@ -136,15 +149,16 @@ func (s State) EstimateTime() (min, max int) {
 	return
 }
 
-func (s State) IsFinish() bool {
+func (s *State) IsFinish() bool {
 	return s.Executed.IsExecutedAll(s.Jobs)
 }
-func (s State) Makespan() int {
-	min, max := s.EstimateTime()
-	if min != max {
-		fmt.Println(s)
-		panic("scheduling not finished yet")
-	}
+func (s *State) Makespan() int {
+	//if s.makespan == 0 {
+	//_, max := util.MinMax(s.JobTimeWave)
+	max := util.MaxOf(s.JobTimeWave)
+	s.makespan = max
+	//}
 
-	return min
+	//return s.makespan
+	return max
 }

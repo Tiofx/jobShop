@@ -2,13 +2,23 @@ package base
 
 type Jobs []Job
 
-func (jobs Jobs) ToMachines() (ms Machines) {
-	ms = make(Machines)
+func (jobs *Jobs) MachineNumber() int {
+	var maxMachineNumber Machine
 
-	for _, job := range jobs {
+	for _, job := range *jobs {
 		for _, task := range job {
-			ms.AddMachine(task.Machine)
+			if task.Machine > maxMachineNumber {
+				maxMachineNumber = task.Machine
+			}
 		}
+	}
+
+	return int(maxMachineNumber) + 1
+}
+
+func (jobs *Jobs) TotalTaskNumber() (number int) {
+	for _, job := range *jobs {
+		number += job.TaskNumber()
 	}
 
 	return
