@@ -46,15 +46,15 @@ func (s *State) saveForRedo(job int, task int) {
 
 func NewState(jobs Jobs) State {
 	jobsNumber := len(jobs)
-	machineNumber := len(jobs.ToMachines())
 
 	return State{
 		Jobs:            jobs,
 		Executed:        make(NumberOfExecutedTasks, jobsNumber),
 		JobTimeWave:     make(JobTimeWave, jobsNumber),
-		MachineTimeWave: make(MachineTimeWave, machineNumber),
+		MachineTimeWave: make(MachineTimeWave, jobs.MachineNumber()),
 		LeftTotalTime:   NewJobsTotalTime(jobs),
 		Parent:          nil,
+		JobOrder:        make([]int, 0, jobs.TotalTaskNumber()),
 	}
 }
 
