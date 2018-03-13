@@ -83,3 +83,9 @@ func CompareIntSlices(a, b []int) bool {
 
 	return true
 }
+
+func FillIntsWith(a []int, value int) {
+	for i := range a {
+		a[i] = value
+	}
+}

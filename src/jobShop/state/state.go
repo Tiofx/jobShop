@@ -58,13 +58,25 @@ func NewState(jobs Jobs) State {
 	}
 }
 
-func (s State) startTimeFor(job, task int) (startTime int) {
+func (s *State) Reset() {
+	util.FillIntsWith(s.Executed, 0)
+	util.FillIntsWith(s.JobTimeWave, 0)
+	util.FillIntsWith(s.MachineTimeWave, 0)
+	s.LeftTotalTime.SetUpBy(s.Jobs)
+
+	util.FillIntsWith(s.JobOrder, 0)
+	s.JobOrder = s.JobOrder[0:0]
+	s.redoData = redoData{}
+	s.Parent = nil
+}
+
+func (s *State) startTimeFor(job, task int) (startTime int) {
 	machine := s.Jobs[job][task].Machine
 	startTime = util.Max(s.JobTimeWave[job], s.MachineTimeWave[machine])
 	return
 }
 
-func (s State) endOf(job, task int) int {
+func (s *State) endOf(job, task int) int {
 	return s.startTimeFor(job, task) + s.Jobs[job][task].Time
 }
 
@@ -98,7 +110,7 @@ func (s *State) Undo() {
 	s.JobOrder = s.JobOrder[:len(s.JobOrder)-1]
 }
 
-func (s State) NextTaskIndexOf(job int) (int, bool) {
+func (s *State) NextTaskIndexOf(job int) (int, bool) {
 	nextTaskIndex := s.Executed[job]
 	if nextTaskIndex >= len(s.Jobs[job]) {
 		return 0, false
@@ -107,7 +119,7 @@ func (s State) NextTaskIndexOf(job int) (int, bool) {
 	return nextTaskIndex, true
 }
 
-func (s State) NextTaskOf(job int) (*Task, bool) {
+func (s *State) NextTaskOf(job int) (*Task, bool) {
 	if nextTaskIndex, ok := s.NextTaskIndexOf(job); ok {
 		return &s.Jobs[job][nextTaskIndex], true
 
@@ -116,7 +128,7 @@ func (s State) NextTaskOf(job int) (*Task, bool) {
 	}
 }
 
-func (s State) EstimateTime() (min, max int) {
+func (s *State) EstimateTime() (min, max int) {
 	var maxEstimateOfJobEnd, totalLeftTime, maxTimeWave int
 
 	for job, currentTime := range s.JobTimeWave {
