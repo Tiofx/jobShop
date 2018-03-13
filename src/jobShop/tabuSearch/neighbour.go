@@ -35,14 +35,9 @@ func (n *neighbour) updateByGraph() (success bool) {
 	return
 }
 
-//func (n *neighbour) updateByState() {
-//
-//}
-
-func (list tabuList) indexOf(neighbour neighbour) int {
+func (list tabuList) indexOf(neighbour *neighbour) int {
 	for index, tabuNeighbour := range list {
 
-		//if tabuNeighbour.Makespan() == neighbour.Makespan() && reflect.DeepEqual(tabuNeighbour.jobState.JobOrder, neighbour.jobState.JobOrder) {
 		if tabuNeighbour.Makespan() == neighbour.Makespan() && util.CompareIntSlices(tabuNeighbour.jobState.JobOrder, neighbour.jobState.JobOrder) {
 			return index
 		}
@@ -51,7 +46,7 @@ func (list tabuList) indexOf(neighbour neighbour) int {
 	return -1
 }
 
-func (list tabuList) contain(neighbour neighbour) bool {
+func (list tabuList) contain(neighbour *neighbour) bool {
 	return list.indexOf(neighbour) != -1
 }
 
@@ -72,8 +67,7 @@ func (n *neighbour) copy() (res neighbour) {
 }
 
 func (n *neighbour) copyIn(in *neighbour) {
-	//deepcopy.Copy(&in, &n)
-	deepcopy.Copy(&in.jobState, &n.jobState)
+	n.jobState.CopyIn(&in.jobState)
 	deepcopy.Copy(&in.graph, &n.graph)
 }
 
@@ -93,6 +87,6 @@ func (ns neighboursSet) Swap(i, j int) {
 	ns[i], ns[j] = ns[j], ns[i]
 }
 
-func (n neighbour) Makespan() int {
+func (n *neighbour) Makespan() int {
 	return n.jobState.Makespan()
 }

@@ -19,8 +19,18 @@ func MinMax(arr []int) (min, max int) {
 	for _, v := range arr {
 		if v < min {
 			min = v
+		} else if v > max {
+			max = v
 		}
+	}
 
+	return
+}
+
+func MaxOf(arr []int) (max int) {
+	max = arr[0]
+
+	for _, v := range arr {
 		if v > max {
 			max = v
 		}

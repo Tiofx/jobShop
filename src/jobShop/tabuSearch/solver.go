@@ -15,6 +15,10 @@ type Solver struct {
 	bestSolution *neighbour
 }
 
+func (s *Solver) GetBest() state.State {
+	return s.bestSolution.jobState
+}
+
 func (s *Solver) BestLocalMakespan() int {
 	if s.bestLocal == nil {
 		return math.MaxInt64
@@ -33,7 +37,6 @@ func (s *Solver) BestMakespan() int {
 
 func NewSolver(state state.State) Solver {
 	initialSolution := From(state)
-	//best, _ := newNeighbour(initialSolution, state.Jobs)
 	best := neighbour{
 		jobState: state,
 		graph:    initialSolution,
@@ -67,7 +70,7 @@ func (s *Solver) setUpBestNeighbour() (isBestSolutionChanged bool) {
 					success := s.CurrentSolution.updateByGraph()
 					//if success && !s.tabuList.contain(*s.CurrentSolution) && s.CurrentSolution.Makespan() < s.BestMakespan() {
 					//	s.CurrentSolution.copyIn(s.bestSolution)
-					if success && !s.tabuList.contain(*s.CurrentSolution) &&
+					if success && !s.tabuList.contain(s.CurrentSolution) &&
 						(s.bestLocal == nil || s.CurrentSolution.Makespan() < s.bestLocal.Makespan()) {
 
 						if s.bestLocal == nil {
@@ -92,14 +95,17 @@ func (s *Solver) setUpBestNeighbour() (isBestSolutionChanged bool) {
 	return
 }
 
+func (s *Solver) EmptyTabu() {
+	s.CurrentSolution = s.bestSolution
+	s.tabuList = s.tabuList[0:0]
+}
+
 func (s *Solver) Next() {
-	//fmt.Println(s.CurrentSolution.jobState.JobOrder)
 	var current neighbour
 	s.CurrentSolution.copyIn(&current)
 
 	isBestSolutionChanged := s.setUpBestNeighbour()
 
-	//fmt.Println(s.BestMakespan(), " ", s.BestLocalMakespan())
 
 	if !isBestSolutionChanged {
 		s.tabuList = append(s.tabuList, current)
@@ -118,12 +124,4 @@ func (s *Solver) Next() {
 		s.bestSolution.copyIn(s.CurrentSolution)
 	}
 
-	//if isBestSolutionChanged {
-	//	s.tabuList = append(s.tabuList, current)
-	//	s.bestSolution.copyIn(s.CurrentSolution)
-	//
-	//} else {
-	//	s.CurrentSolution = &s.tabuList[0]
-	//	s.tabuList = s.tabuList[1:]
-	//}
 }

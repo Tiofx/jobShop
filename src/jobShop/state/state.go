@@ -3,7 +3,6 @@ package state
 import (
 	"jobShop/util"
 	. "jobShop/base"
-	"fmt"
 )
 
 type State struct {
@@ -18,6 +17,7 @@ type State struct {
 	Parent   *State
 	redoData redoData
 	JobOrder []int
+	makespan int
 }
 
 type redoData struct {
@@ -67,6 +67,7 @@ func (s *State) Reset() {
 	util.FillIntsWith(s.JobOrder, 0)
 	s.JobOrder = s.JobOrder[0:0]
 	s.redoData = redoData{}
+	s.makespan = 0
 	s.Parent = nil
 }
 
@@ -152,11 +153,12 @@ func (s *State) IsFinish() bool {
 	return s.Executed.IsExecutedAll(s.Jobs)
 }
 func (s *State) Makespan() int {
-	min, max := s.EstimateTime()
-	if min != max {
-		fmt.Println(s)
-		panic("scheduling not finished yet")
-	}
+	//if s.makespan == 0 {
+	//_, max := util.MinMax(s.JobTimeWave)
+	max := util.MaxOf(s.JobTimeWave)
+	s.makespan = max
+	//}
 
-	return min
+	//return s.makespan
+	return max
 }
