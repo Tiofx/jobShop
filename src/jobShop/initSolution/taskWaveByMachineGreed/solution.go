@@ -36,6 +36,9 @@ func (s Resolver) NextTaskWave() (tw TaskWave) {
 
 func (s *Resolver) Next() Resolver {
 	tasks := s.NextTaskWave().GetBiggest()
+	if len(tasks) > 5 {
+		tasks = tasks[:4]
+	}
 	nextSolution := s.GreedChoice(tasks)
 	nextSolution.Parent = &s.State
 
