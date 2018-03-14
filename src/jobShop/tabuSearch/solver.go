@@ -54,52 +54,41 @@ func NewSolver(state state.State) Solver {
 }
 
 func (s *Solver) setUpBestNeighbour() (bestMove move) {
-	criticalJob := criticalJob(s.CurrentSolution.jobState)
-	tasks := s.CurrentSolution.graph.criticalTaskPositionFor(criticalJob)
-	graph := s.CurrentSolution.graph
-
+	//criticalJob := job(rand.Int() % len(s.jobs))
 	s.bestLocal = nil
-	for machine, tasksOfMachine := range tasks {
-		for _, task := range tasksOfMachine {
-			for taskIndex, _ := range graph[machine] {
-				if taskIndex != int(task) {
-					//todo: refactoring for iterating by moves
-					move := move{machine: int(machine), i: taskIndex, j: int(task)}
-					s.CurrentSolution.apply(move)
+	for move := range s.worstJobs() {
+		s.CurrentSolution.apply(move)
 
-					//TODO: optimize, make checking in tabu before update graph
-					//TODO: store impossible move to prevent useless graph update
-					success := s.CurrentSolution.updateByGraph()
+		//TODO: optimize, make checking in tabu before update graph
+		//TODO: store impossible move to prevent useless graph update
+		success := s.CurrentSolution.updateByGraph()
 
-					if success {
-						if s.CurrentSolution.Makespan() < s.bestSolution.Makespan() {
-							s.tabuList.Forget(move)
-						}
+		if success {
+			if s.CurrentSolution.Makespan() < s.bestSolution.Makespan() {
+				s.tabuList.Forget(move)
+			}
 
-						if s.bestLocal == nil {
-							s.bestLocal = &neighbour{}
-							s.CurrentSolution.copyIn(s.bestLocal)
+			if s.bestLocal == nil {
+				s.bestLocal = &neighbour{}
+				s.CurrentSolution.copyIn(s.bestLocal)
 
-						} else if s.CurrentSolution.Makespan() < s.bestLocal.Makespan() &&
-							!s.tabuList.Contain(move) {
+			} else if s.CurrentSolution.Makespan() < s.bestLocal.Makespan() &&
+				!s.tabuList.Contain(move) {
 
-							bestMove = move
-							s.CurrentSolution.copyIn(s.bestLocal)
-						}
-					}
-
-					s.CurrentSolution.redo(move)
-				}
+				bestMove = move
+				s.CurrentSolution.copyIn(s.bestLocal)
 			}
 		}
+
+		s.CurrentSolution.redo(move)
 	}
 
 	return
 }
 
 func (s *Solver) Next() {
-	var current neighbour
-	s.CurrentSolution.copyIn(&current)
+	//var current neighbour
+	//s.CurrentSolution.copyIn(&current)
 
 	bestMove := s.setUpBestNeighbour()
 
@@ -131,5 +120,4 @@ func (s *Solver) Next() {
 		s.tabuList.Add(bestMove)
 		s.bestSolution.copyIn(s.CurrentSolution)
 	}
-
 }
