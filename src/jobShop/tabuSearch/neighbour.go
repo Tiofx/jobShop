@@ -16,8 +16,6 @@ type neighbour struct {
 
 type neighboursSet []neighbour
 
-type tabuList neighboursSet
-
 func (n *neighbour) updateByGraph() (success bool) {
 	n.jobState.Reset()
 
