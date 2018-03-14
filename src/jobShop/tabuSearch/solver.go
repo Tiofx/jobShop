@@ -9,7 +9,7 @@ import (
 type Solver struct {
 	jobs            base.Jobs
 	CurrentSolution *neighbour
-	tabuList        tabuList
+	tabuList        TabuList
 
 	bestLocal    *neighbour
 	bestSolution *neighbour
@@ -52,7 +52,7 @@ func NewSolver(state state.State) Solver {
 	}
 }
 
-func (s *Solver) setUpBestNeighbour() (isBestSolutionChanged bool) {
+func (s *Solver) setUpBestNeighbour() (bestMove move) {
 	criticalJob := criticalJob(s.CurrentSolution.jobState)
 	tasks := s.CurrentSolution.graph.criticalTaskPositionFor(criticalJob)
 	graph := s.CurrentSolution.graph
@@ -67,17 +67,24 @@ func (s *Solver) setUpBestNeighbour() (isBestSolutionChanged bool) {
 					s.CurrentSolution.apply(move)
 
 					//TODO: optimize, make checking in tabu before update graph
+					//TODO: store impossible move to prevent useless graph update
 					success := s.CurrentSolution.updateByGraph()
-					//if success && !s.tabuList.contain(*s.CurrentSolution) && s.CurrentSolution.Makespan() < s.BestMakespan() {
-					//	s.CurrentSolution.copyIn(s.bestSolution)
-					if success && !s.tabuList.contain(s.CurrentSolution) &&
-						(s.bestLocal == nil || s.CurrentSolution.Makespan() < s.bestLocal.Makespan()) {
+
+					if success {
+						if s.CurrentSolution.Makespan() < s.bestSolution.Makespan() {
+							s.tabuList.Forget(move)
+						}
 
 						if s.bestLocal == nil {
 							s.bestLocal = &neighbour{}
+							s.CurrentSolution.copyIn(s.bestLocal)
+
+						} else if s.CurrentSolution.Makespan() < s.bestLocal.Makespan() &&
+							!s.tabuList.Contain(move) {
+
+							bestMove = move
+							s.CurrentSolution.copyIn(s.bestLocal)
 						}
-						s.CurrentSolution.copyIn(s.bestLocal)
-						//isBestSolutionChanged = true
 					}
 
 					s.CurrentSolution.redo(move)
@@ -86,41 +93,42 @@ func (s *Solver) setUpBestNeighbour() (isBestSolutionChanged bool) {
 		}
 	}
 
-	if s.bestLocal != nil && s.bestLocal.Makespan() < s.BestMakespan() {
-		isBestSolutionChanged = true
-		s.bestSolution = s.bestLocal
-		s.bestLocal = nil
-	}
-
 	return
-}
-
-func (s *Solver) EmptyTabu() {
-	s.CurrentSolution = s.bestSolution
-	s.tabuList = s.tabuList[0:0]
 }
 
 func (s *Solver) Next() {
 	var current neighbour
 	s.CurrentSolution.copyIn(&current)
 
-	isBestSolutionChanged := s.setUpBestNeighbour()
+	bestMove := s.setUpBestNeighbour()
 
+
+	isBestSolutionChanged := false
+	if s.bestLocal != nil && s.bestLocal.Makespan() < s.BestMakespan() {
+		s.bestSolution = s.bestLocal
+		s.bestLocal = nil
+		isBestSolutionChanged = true
+	}
 
 	if !isBestSolutionChanged {
-		s.tabuList = append(s.tabuList, current)
+		s.tabuList.Add(bestMove)
 
 		if s.bestLocal != nil {
 			s.CurrentSolution = s.bestLocal
 			s.bestLocal = nil
 
 		} else {
-			s.CurrentSolution = &s.tabuList[0]
-			s.tabuList = s.tabuList[1:]
+			newMove := s.tabuList.ForgetOldest()
+
+			s.CurrentSolution.apply(newMove)
+			s.CurrentSolution.updateByGraph()
+			if s.CurrentSolution.Makespan() < s.BestMakespan() {
+				s.CurrentSolution.copyIn(s.bestSolution)
+			}
 		}
 
 	} else {
-		s.tabuList = append(s.tabuList, current)
+		s.tabuList.Add(bestMove)
 		s.bestSolution.copyIn(s.CurrentSolution)
 	}
 
