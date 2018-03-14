@@ -3,6 +3,7 @@ package tabuSearch
 import (
 	"jobShop/base"
 	"jobShop/state"
+	"math/rand"
 )
 
 type taskPosition int
@@ -44,6 +45,30 @@ func (s *Solver) worstJobs() (iterator <-chan move) {
 	ch := make(chan move)
 
 	criticalJob := criticalJob(s.CurrentSolution.jobState)
+	tasks := s.CurrentSolution.graph.criticalTaskPositionFor(criticalJob)
+	graph := s.CurrentSolution.graph
+
+	go func(consumer chan<- move) {
+		defer close(consumer)
+
+		for machine, tasksOfMachine := range tasks {
+			for _, task := range tasksOfMachine {
+				for taskIndex, _ := range graph[machine] {
+					if taskIndex != int(task) {
+						consumer <- move{machine: int(machine), i: taskIndex, j: int(task)}
+					}
+				}
+			}
+		}
+	}(ch)
+
+	return ch
+}
+
+func (s *Solver) randomJobs() (iterator <-chan move) {
+	ch := make(chan move)
+
+	criticalJob := job(rand.Int() % len(s.jobs))
 	tasks := s.CurrentSolution.graph.criticalTaskPositionFor(criticalJob)
 	graph := s.CurrentSolution.graph
 

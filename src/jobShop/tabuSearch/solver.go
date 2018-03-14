@@ -54,9 +54,8 @@ func NewSolver(state state.State) Solver {
 }
 
 func (s *Solver) setUpBestNeighbour() (bestMove move) {
-	//criticalJob := job(rand.Int() % len(s.jobs))
 	s.bestLocal = nil
-	for move := range s.worstJobs() {
+	for move := range s.randomJobs() {
 		s.CurrentSolution.apply(move)
 
 		//TODO: optimize, make checking in tabu before update graph
