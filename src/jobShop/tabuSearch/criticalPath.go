@@ -9,7 +9,6 @@ type taskPosition int
 
 type criticalTasks map[base.Machine][]taskPosition
 
-
 func criticalJob(state state.State) job {
 	var (
 		criticalJob       int

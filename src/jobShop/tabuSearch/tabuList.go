@@ -11,7 +11,7 @@ type tabuList struct {
 	list []move
 }
 
-func (tabu *tabuList) IndexOf(move move) (index int, exist bool) {
+func (tabu tabuList) IndexOf(move move) (index int, exist bool) {
 	for i, tabuMove := range tabu.list {
 		if move == tabuMove {
 			return i, true
@@ -21,16 +21,16 @@ func (tabu *tabuList) IndexOf(move move) (index int, exist bool) {
 	return -1, false
 }
 
-func (tabu *tabuList) Contain(move move) bool {
+func (tabu tabuList) Contain(move move) bool {
 	_, exist := tabu.IndexOf(move)
 	return exist
 }
 
-func (tabu *tabuList) Add(move move) {
+func (tabu tabuList) Add(move move) {
 	tabu.list = append(tabu.list, move)
 }
 
-func (tabu *tabuList) Forget(move move) (success bool) {
+func (tabu tabuList) Forget(move move) (success bool) {
 	removeIndex, exist := tabu.IndexOf(move)
 	if !exist {
 		return false
@@ -41,7 +41,7 @@ func (tabu *tabuList) Forget(move move) (success bool) {
 	return true
 }
 
-func (tabu *tabuList) ForgetOldest() move {
+func (tabu tabuList) ForgetOldest() move {
 	oldest := tabu.list[0]
 	tabu.list = tabu.list[:1]
 

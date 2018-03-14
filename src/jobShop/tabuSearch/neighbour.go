@@ -14,8 +14,6 @@ type neighbour struct {
 	graphState *State
 }
 
-type neighboursSet []neighbour
-
 func (n *neighbour) updateByGraph() (success bool) {
 	n.jobState.Reset()
 
@@ -31,21 +29,6 @@ func (n *neighbour) updateByGraph() (success bool) {
 	success = n.graphState.To(&n.jobState)
 
 	return
-}
-
-func (list tabuList) indexOf(neighbour *neighbour) int {
-	for index, tabuNeighbour := range list {
-
-		if tabuNeighbour.Makespan() == neighbour.Makespan() && util.CompareIntSlices(tabuNeighbour.jobState.JobOrder, neighbour.jobState.JobOrder) {
-			return index
-		}
-	}
-
-	return -1
-}
-
-func (list tabuList) contain(neighbour *neighbour) bool {
-	return list.indexOf(neighbour) != -1
 }
 
 type move struct{ machine, i, j int }
@@ -71,18 +54,6 @@ func (n *neighbour) copyIn(in *neighbour) {
 
 func (n *neighbour) redo(move move) {
 	n.apply(move)
-}
-
-func (ns neighboursSet) Len() int {
-	return len(ns)
-}
-
-func (ns neighboursSet) Less(i, j int) bool {
-	return ns[i].Makespan() < ns[j].Makespan()
-}
-
-func (ns neighboursSet) Swap(i, j int) {
-	ns[i], ns[j] = ns[j], ns[i]
 }
 
 func (n *neighbour) Makespan() int {

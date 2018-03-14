@@ -49,6 +49,7 @@ func NewSolver(state state.State) Solver {
 		jobs:            state.Jobs,
 		CurrentSolution: &best,
 		bestSolution:    &bestCopy,
+		tabuList:        tabuList{},
 	}
 }
 
@@ -101,7 +102,6 @@ func (s *Solver) Next() {
 	s.CurrentSolution.copyIn(&current)
 
 	bestMove := s.setUpBestNeighbour()
-
 
 	isBestSolutionChanged := false
 	if s.bestLocal != nil && s.bestLocal.Makespan() < s.BestMakespan() {
