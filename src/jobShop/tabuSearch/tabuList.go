@@ -1,17 +1,19 @@
 package tabuSearch
 
+import . "jobShop/tabuSearch/neighborhood"
+
 type TabuList interface {
-	Contain(move move) bool
-	Add(move move)
-	Forget(move move) bool
-	ForgetOldest() move
+	Contain(move Move) bool
+	Add(move Move)
+	Forget(move Move) bool
+	ForgetOldest() Move
 }
 
 type tabuList struct {
-	list []move
+	list []Move
 }
 
-func (tabu tabuList) IndexOf(move move) (index int, exist bool) {
+func (tabu tabuList) IndexOf(move Move) (index int, exist bool) {
 	for i, tabuMove := range tabu.list {
 		if move == tabuMove {
 			return i, true
@@ -21,16 +23,16 @@ func (tabu tabuList) IndexOf(move move) (index int, exist bool) {
 	return -1, false
 }
 
-func (tabu tabuList) Contain(move move) bool {
+func (tabu tabuList) Contain(move Move) bool {
 	_, exist := tabu.IndexOf(move)
 	return exist
 }
 
-func (tabu tabuList) Add(move move) {
+func (tabu tabuList) Add(move Move) {
 	tabu.list = append(tabu.list, move)
 }
 
-func (tabu tabuList) Forget(move move) (success bool) {
+func (tabu tabuList) Forget(move Move) (success bool) {
 	removeIndex, exist := tabu.IndexOf(move)
 	if !exist {
 		return false
@@ -41,7 +43,7 @@ func (tabu tabuList) Forget(move move) (success bool) {
 	return true
 }
 
-func (tabu tabuList) ForgetOldest() move {
+func (tabu tabuList) ForgetOldest() Move {
 	oldest := tabu.list[0]
 	tabu.list = tabu.list[:1]
 

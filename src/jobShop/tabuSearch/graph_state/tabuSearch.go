@@ -1,4 +1,4 @@
-package tabuSearch
+package graph_state
 
 import (
 	"jobShop/state"

@@ -4,19 +4,22 @@ import (
 	"jobShop/base"
 	"jobShop/state"
 	"math"
+	. "jobShop/tabuSearch/neighborhood"
+	"jobShop/tabuSearch/neighborhood"
+	"jobShop/tabuSearch/graph_state"
 )
 
 type Solver struct {
 	jobs            base.Jobs
-	CurrentSolution *neighbour
+	CurrentSolution *Neighbour
 	tabuList        TabuList
 
-	bestLocal    *neighbour
-	bestSolution *neighbour
+	bestLocal    *Neighbour
+	bestSolution *Neighbour
 }
 
 func (s *Solver) GetBest() state.State {
-	return s.bestSolution.jobState
+	return s.bestSolution.JobState
 }
 
 func (s *Solver) BestLocalMakespan() int {
@@ -36,14 +39,14 @@ func (s *Solver) BestMakespan() int {
 }
 
 func NewSolver(state state.State) Solver {
-	initialSolution := From(state)
-	best := neighbour{
-		jobState: state,
-		graph:    initialSolution,
+	initialSolution := graph_state.From(state)
+	best := Neighbour{
+		JobState: state,
+		Graph:    initialSolution,
 	}
 
-	var bestCopy neighbour
-	best.copyIn(&bestCopy)
+	var bestCopy Neighbour
+	best.CopyIn(&bestCopy)
 
 	return Solver{
 		jobs:            state.Jobs,
@@ -53,14 +56,15 @@ func NewSolver(state state.State) Solver {
 	}
 }
 
-func (s *Solver) setUpBestNeighbour() (bestMove move) {
+func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 	s.bestLocal = nil
-	for move := range s.randomJobs() {
-		s.CurrentSolution.apply(move)
+	iterator := neighborhood.NewByRandomJob(&s.CurrentSolution.JobState, &s.CurrentSolution.Graph)
+	for move := range iterator.Generator() {
+		s.CurrentSolution.Apply(move)
 
 		//TODO: optimize, make checking in tabu before update graph
-		//TODO: store impossible move to prevent useless graph update
-		success := s.CurrentSolution.updateByGraph()
+		//TODO: store impossible Move to prevent useless graph update
+		success := s.CurrentSolution.UpdateByGraph()
 
 		if success {
 			if s.CurrentSolution.Makespan() < s.bestSolution.Makespan() {
@@ -68,25 +72,25 @@ func (s *Solver) setUpBestNeighbour() (bestMove move) {
 			}
 
 			if s.bestLocal == nil {
-				s.bestLocal = &neighbour{}
-				s.CurrentSolution.copyIn(s.bestLocal)
+				s.bestLocal = &Neighbour{}
+				s.CurrentSolution.CopyIn(s.bestLocal)
 
 			} else if s.CurrentSolution.Makespan() < s.bestLocal.Makespan() &&
 				!s.tabuList.Contain(move) {
 
 				bestMove = move
-				s.CurrentSolution.copyIn(s.bestLocal)
+				s.CurrentSolution.CopyIn(s.bestLocal)
 			}
 		}
 
-		s.CurrentSolution.redo(move)
+		s.CurrentSolution.Redo(move)
 	}
 
 	return
 }
 
 func (s *Solver) Next() {
-	//var current neighbour
+	//var current Neighbour
 	//s.CurrentSolution.copyIn(&current)
 
 	bestMove := s.setUpBestNeighbour()
@@ -108,15 +112,15 @@ func (s *Solver) Next() {
 		} else {
 			newMove := s.tabuList.ForgetOldest()
 
-			s.CurrentSolution.apply(newMove)
-			s.CurrentSolution.updateByGraph()
+			s.CurrentSolution.Apply(newMove)
+			s.CurrentSolution.UpdateByGraph()
 			if s.CurrentSolution.Makespan() < s.BestMakespan() {
-				s.CurrentSolution.copyIn(s.bestSolution)
+				s.CurrentSolution.CopyIn(s.bestSolution)
 			}
 		}
 
 	} else {
 		s.tabuList.Add(bestMove)
-		s.bestSolution.copyIn(s.CurrentSolution)
+		s.bestSolution.CopyIn(s.CurrentSolution)
 	}
 }
