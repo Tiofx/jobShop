@@ -36,5 +36,5 @@ func (r ByLongestJob) Generator() (iterator <-chan Move) {
 	criticalJob := r.criticalJob()
 	tasks := r.taskPositionFor(criticalJob)
 
-	return r.generateFor(criticalJob, tasks)
+	return r.generateFor(tasks)
 }

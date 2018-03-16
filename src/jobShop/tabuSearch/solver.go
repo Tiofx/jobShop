@@ -18,8 +18,8 @@ type Solver struct {
 	bestSolution *Neighbour
 }
 
-func (s *Solver) GetBest() state.State {
-	return s.bestSolution.JobState
+func (s *Solver) GetBest() *Neighbour {
+	return s.bestSolution
 }
 
 func (s *Solver) BestLocalMakespan() int {
@@ -58,7 +58,7 @@ func NewSolver(state state.State) Solver {
 
 func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 	s.bestLocal = nil
-	iterator := neighborhood.NewByRandomJob(&s.CurrentSolution.JobState, &s.CurrentSolution.Graph)
+	iterator := neighborhood.NewByCriticalPath(&s.CurrentSolution.JobState, &s.CurrentSolution.Graph)
 	for move := range iterator.Generator() {
 		s.CurrentSolution.Apply(move)
 

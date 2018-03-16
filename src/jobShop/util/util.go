@@ -12,6 +12,13 @@ func Max(x, y int) int {
 	return y
 }
 
+func Min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
 func MinMax(arr []int) (min, max int) {
 	min = arr[0]
 	max = arr[0]

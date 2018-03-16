@@ -31,7 +31,7 @@ func (r byJob) taskPositionFor(critical job) criticalTasks {
 	return tasks
 }
 
-func (r byJob) generateFor(job job, tasks criticalTasks) (iterator <-chan Move) {
+func (r byJob) generateFor(tasks criticalTasks) (iterator <-chan Move) {
 	ch := make(chan Move)
 
 	go func(consumer chan<- Move) {
