@@ -79,6 +79,11 @@ func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 				//bestMove = move
 			}
 
+			if s.tabuList.Contain(move) {
+				s.CurrentSolution.Redo(move)
+				continue
+			}
+
 			//fmt.Println(s.CurrentSolution.Makespan(), "-move: ", move)
 
 			if s.bestLocal == nil {
@@ -129,12 +134,18 @@ func (s *Solver) Next() {
 
 		} else {
 			//fmt.Println("-- tabu: ", s.tabuList)
-			newMove := s.tabuList.ForgetOldest()
 			//fmt.Println(newMove)
 			//fmt.Println("-- tabu: ", s.tabuList)
 
-			s.CurrentSolution.Apply(newMove)
-			s.CurrentSolution.UpdateByGraph()
+			for {
+				newMove := s.tabuList.ForgetOldest()
+				s.CurrentSolution.Apply(newMove)
+				success := s.CurrentSolution.UpdateByGraph()
+				if success {
+					break
+				}
+				s.CurrentSolution.Redo(newMove)
+			}
 			if s.CurrentSolution.Makespan() < s.BestMakespan() {
 				s.CurrentSolution.CopyIn(s.bestSolution)
 			}
