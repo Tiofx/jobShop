@@ -19,12 +19,12 @@ func getAllFiles() []os.FileInfo {
 	return infos
 }
 
-func testCaseOf(filename string) TestCase {
-	return NewTestCase(testDir + "/" + filename)
+func testCaseOf(filename string) testCase {
+	return newTestCase(testDir + "/" + filename)
 }
 
-func testsOf(filenames []string) []TestCase {
-	res := make([]TestCase, len(filenames), 0)
+func testsOf(filenames []string) []testCase {
+	res := make([]testCase, len(filenames), 0)
 	for _, filename := range filenames {
 		res = append(res, testCaseOf(filename))
 	}
@@ -32,7 +32,7 @@ func testsOf(filenames []string) []TestCase {
 	return res
 }
 
-func testCaseNumber(index int) TestCase {
+func testCaseNumber(index int) testCase {
 	files := getAllFiles()
 	lastIndex := len(files) - 1
 	if index < 0 || index > lastIndex {
@@ -42,7 +42,7 @@ func testCaseNumber(index int) TestCase {
 	return testCaseOf(files[index].Name())
 }
 
-func simpleTestCase() TestCase {
+func simpleTestCase() testCase {
 	jobs := base.Jobs{
 		base.Job{
 			base.Task{0, 3},
@@ -62,7 +62,7 @@ func simpleTestCase() TestCase {
 		},
 	}
 
-	return TestCase{
+	return testCase{
 		JobsNumber:  3,
 		TasksNumber: 3,
 		Optimum:     11,
@@ -70,15 +70,15 @@ func simpleTestCase() TestCase {
 	}
 }
 
-func generalTestCase() TestCase {
+func generalTestCase() testCase {
 	return testCaseNumber(0)
 }
 
-func complexTestCase() TestCase {
+func complexTestCase() testCase {
 	return testCaseNumber(2)
 }
 
-func allTestsCases() (res []TestCase) {
+func allTestsCases() (res []testCase) {
 	for _, fileInfo := range getAllFiles() {
 		res = append(res, testCaseOf(fileInfo.Name()))
 	}

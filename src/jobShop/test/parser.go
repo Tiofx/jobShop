@@ -9,17 +9,17 @@ import (
 	"strings"
 )
 
-type TestCase struct {
+type testCase struct {
 	JobsNumber, TasksNumber, Optimum int
 
 	base.Jobs
 }
 
-func NewTestCase(filename string) TestCase {
+func newTestCase(filename string) testCase {
 	scanner := newTestParser(filename)
 	jobsNumber, taskNumbers, optimum, jobs := scanner.parseAllData()
 
-	return TestCase{
+	return testCase{
 		JobsNumber:  jobsNumber,
 		TasksNumber: taskNumbers,
 		Optimum:     optimum,
