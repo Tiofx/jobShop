@@ -19,8 +19,12 @@ func getAllFiles() []os.FileInfo {
 	return infos
 }
 
+func fullPathTo(filename string) string {
+	return testDir + "/" + filename
+}
+
 func testCaseOf(filename string) testCase {
-	return newTestCase(testDir + "/" + filename)
+	return newTestCase(filename)
 }
 
 func testsOf(filenames []string) []testCase {
@@ -63,6 +67,7 @@ func simpleTestCase() testCase {
 	}
 
 	return testCase{
+		Filename:    "no file",
 		JobsNumber:  3,
 		TasksNumber: 3,
 		Optimum:     11,
