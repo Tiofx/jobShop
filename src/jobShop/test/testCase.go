@@ -25,12 +25,12 @@ func newTestCase(filename string) testCase {
 	}
 }
 
-func (ts *testCase) String() (res string) {
-	res += fmt.Sprintf("----- Short test description -----")
-	res += fmt.Sprintf("file name: %v", ts.Filename)
-	res += fmt.Sprintf("job number: %v", ts.JobsNumber)
-	res += fmt.Sprintf("task number on each job: %v", ts.TasksNumber)
-	res += fmt.Sprintf("optimum: %v", ts.Optimum)
-	res += fmt.Sprintf("---------------------")
+func (ts testCase) String() (res string) {
+	res += fmt.Sprintf("----- Short test description -----\n")
+	res += fmt.Sprintf("file name:   %v\n", ts.Filename)
+	res += fmt.Sprintf("job number:  %v\n", ts.JobsNumber)
+	res += fmt.Sprintf("task number: %v\n", ts.TasksNumber)
+	res += fmt.Sprintf("optimum:     %v\n", ts.Optimum)
+	res += fmt.Sprintf("----------------------------------\n")
 	return
 }

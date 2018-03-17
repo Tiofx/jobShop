@@ -27,15 +27,6 @@ func testCaseOf(filename string) testCase {
 	return newTestCase(filename)
 }
 
-func testsOf(filenames []string) []testCase {
-	res := make([]testCase, len(filenames), 0)
-	for _, filename := range filenames {
-		res = append(res, testCaseOf(filename))
-	}
-
-	return res
-}
-
 func testCaseNumber(index int) testCase {
 	files := getAllFiles()
 	lastIndex := len(files) - 1
