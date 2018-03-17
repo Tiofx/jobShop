@@ -24,6 +24,21 @@ func (jobs *Jobs) TotalTaskNumber() (number int) {
 	return
 }
 
+func (jobs *Jobs) TaskNumber(beforeJob int) (number int) {
+	if beforeJob < 0 {
+		return 0
+	}
+
+	for jobIndex, job := range *jobs {
+		if beforeJob == jobIndex {
+			break
+		}
+		number += job.TaskNumber()
+	}
+
+	return
+}
+
 func (jobs Jobs) EstimateTime() (min, max int) {
 	var total, maxJobTime int
 
