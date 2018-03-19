@@ -6,6 +6,7 @@ import (
 	"log"
 	"fmt"
 	"jobShop/base"
+	"math/rand"
 )
 
 var testDir = "./testinstances"
@@ -64,6 +65,7 @@ func simpleTestCase() testCase {
 
 func generalTestCase() testCase { return testCaseNumber(0) }
 func complexTestCase() testCase { return testCaseNumber(2) }
+func randomTest() testCase      { return testCaseNumber(rand.Intn(testsNumber())) }
 
 func allTestsCases() []testCase {
 	var res []testCase
