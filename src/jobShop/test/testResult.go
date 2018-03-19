@@ -29,20 +29,26 @@ func (r Result) String() (res string) {
 	return
 }
 
-func (r Result) HowMuchWorse() float32 {
-	return float32(r.Result.Makespan()-r.Problem.Optimum) / float32(r.Problem.Optimum)
+func (r Result) HowMuchWorse() float64 {
+	return float64(r.Result.Makespan()-r.Problem.Optimum) / float64(r.Problem.Optimum)
 }
 
-func test(testCase testCase, solver func(jobs base.Jobs) state.State) Result {
-	start := time.Now()
+func test(solver func(jobs base.Jobs) state.State, tests ...testCase) Results {
+	results := make(Results, 0, len(tests))
 
-	result := solver(testCase.Jobs)
+	for _, testCase := range tests {
+		start := time.Now()
+		s := solver(testCase.Jobs)
+		duration := time.Since(start)
 
-	duration := time.Since(start)
+		r := Result{
+			Problem: ProblemDescription{testCase},
+			Result:  s,
+			Elapsed: duration,
+		}
 
-	return Result{
-		Problem: ProblemDescription{testCase},
-		Result:  result,
-		Elapsed: duration,
+		results = append(results, r)
 	}
+
+	return results
 }
