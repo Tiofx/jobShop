@@ -8,7 +8,7 @@ import (
 	"jobShop/base"
 )
 
-const testDir = "./testinstances"
+var testDir = "./testinstances"
 
 func getAllFiles() []os.FileInfo {
 	infos, err := ioutil.ReadDir(testDir)
@@ -19,13 +19,9 @@ func getAllFiles() []os.FileInfo {
 	return infos
 }
 
-func fullPathTo(filename string) string {
-	return testDir + "/" + filename
-}
-
-func testCaseOf(filename string) testCase {
-	return newTestCase(filename)
-}
+func fullPathTo(filename string) string   { return testDir + "/" + filename }
+func testCaseOf(filename string) testCase { return newTestCase(filename) }
+func testsNumber() int                    { return len(getAllFiles()) }
 
 func testCaseNumber(index int) testCase {
 	files := getAllFiles()
@@ -66,15 +62,11 @@ func simpleTestCase() testCase {
 	}
 }
 
-func generalTestCase() testCase {
-	return testCaseNumber(0)
-}
+func generalTestCase() testCase { return testCaseNumber(0) }
+func complexTestCase() testCase { return testCaseNumber(2) }
 
-func complexTestCase() testCase {
-	return testCaseNumber(2)
-}
-
-func allTestsCases() (res []testCase) {
+func allTestsCases() []testCase {
+	var res []testCase
 	for _, fileInfo := range getAllFiles() {
 		res = append(res, testCaseOf(fileInfo.Name()))
 	}
