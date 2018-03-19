@@ -12,7 +12,8 @@ type TaskInfo struct {
 
 type TaskInfoSet []TaskInfo
 
-type TaskWave map[Machine]TaskInfoSet
+//type TaskWave map[Machine]TaskInfoSet
+type TaskWave []TaskInfoSet
 
 func (tw TaskWave) Add(job int, task *Task) {
 	currentTasks := tw[task.Machine]
@@ -22,7 +23,7 @@ func (tw TaskWave) Add(job int, task *Task) {
 func (tw TaskWave) GetBiggest() []TaskInfo {
 	var (
 		biggest        int
-		indexOfBiggest Machine
+		indexOfBiggest int
 	)
 
 	for machine, arr := range tw {
