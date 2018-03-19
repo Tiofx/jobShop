@@ -6,6 +6,7 @@ import (
 )
 
 type Resolver struct {
+	MaxTasksOnWave int
 	State
 }
 
@@ -13,44 +14,44 @@ func (r *Resolver) IsBetterThan(second Resolver) bool {
 	return r.State.IsBetterThan(second.State)
 }
 
-func (s *Resolver) Copy() Resolver {
-	return Resolver{s.State.Copy()}
+func (r *Resolver) Copy() Resolver {
+	return Resolver{MaxTasksOnWave: r.MaxTasksOnWave, State: r.State.Copy()}
 }
 
-func (s *Resolver) ExecuteByTaskInfo(info TaskInfo) {
-	taskPosition := s.Executed[info.Job]
-	s.Execute(info.Job, taskPosition)
+func (r *Resolver) ExecuteByTaskInfo(info TaskInfo) {
+	taskPosition := r.Executed[info.Job]
+	r.Execute(info.Job, taskPosition)
 }
 
-func (s Resolver) NextTaskWave() (tw TaskWave) {
-	tw = make(TaskWave)
+func (r Resolver) NextTaskWave() TaskWave {
+	tw := make(TaskWave, r.Jobs.MachineNumber())
 
-	for i := range s.Jobs {
-		if task, ok := s.NextTaskOf(i); ok {
+	for i := range r.Jobs {
+		if task, ok := r.NextTaskOf(i); ok {
 			tw.Add(i, task)
 		}
 	}
 
-	return
+	return tw
 }
 
-func (s *Resolver) Next() Resolver {
-	tasks := s.NextTaskWave().GetBiggest()
-	if len(tasks) > 5 {
-		tasks = tasks[:4]
+func (r *Resolver) Next() Resolver {
+	tasks := r.NextTaskWave().GetBiggest()
+	if len(tasks) > r.MaxTasksOnWave {
+		tasks = tasks[:r.MaxTasksOnWave-1]
 	}
-	nextSolution := s.GreedChoice(tasks)
-	nextSolution.Parent = &s.State
+	nextSolution := r.GreedChoice(tasks)
+	nextSolution.Parent = &r.State
 
 	return nextSolution
 }
 
-func (s Resolver) GreedChoice(tasks TaskInfoSet) Resolver {
+func (r Resolver) GreedChoice(tasks TaskInfoSet) Resolver {
 	var best *Resolver
 
 	c := util.Combination(len(tasks))
 	for tasksOrder, isChanOpen := <-c; isChanOpen; tasksOrder, isChanOpen = <-c {
-		newState := s.Copy()
+		newState := r.Copy()
 
 		for _, index := range tasksOrder {
 			currentTask := tasks[index]
@@ -65,10 +66,10 @@ func (s Resolver) GreedChoice(tasks TaskInfoSet) Resolver {
 	return *best
 }
 
-func (s Resolver) FindSolution() State {
+func (r Resolver) FindSolution() State {
 	var currentState Resolver
 
-	for currentState = s; !currentState.IsFinish(); currentState = currentState.Next() {
+	for currentState = r; !currentState.IsFinish(); currentState = currentState.Next() {
 
 	}
 
