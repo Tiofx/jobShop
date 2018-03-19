@@ -1,4 +1,4 @@
-package parser
+package test
 
 import (
 	"jobShop/base"
@@ -8,24 +8,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-type TestCase struct {
-	JobsNumber, TasksNumber, Optimum int
-
-	base.Jobs
-}
-
-func NewTestCase(filename string) TestCase {
-	scanner := newTestParser(filename)
-	jobsNumber, taskNumbers, optimum, jobs := scanner.parseAllData()
-
-	return TestCase{
-		JobsNumber:  jobsNumber,
-		TasksNumber: taskNumbers,
-		Optimum:     optimum,
-		Jobs:        jobs,
-	}
-}
 
 type testParser struct {
 	words []string
@@ -60,6 +42,7 @@ func newTestParser(filename string) *testParser {
 
 	return &testParser{Scanner: scanner}
 }
+
 func skipLine(scanner *bufio.Scanner) {
 	scanner.Scan()
 }
