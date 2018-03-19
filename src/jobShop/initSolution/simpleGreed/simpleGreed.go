@@ -7,10 +7,10 @@ import (
 type job int
 type task int
 
-type TaskWave map[job]task
+type TaskWave []*task
 
 func (tw TaskWave) addTask(job job, task task) {
-	tw[job] = task
+	tw[job] = &task
 }
 
 type Resolver struct {
@@ -22,16 +22,16 @@ func (r *Resolver) IsBetterThan(second Resolver) bool {
 	return r.State.IsBetterThan(second.State)
 }
 
-func (resolver *Resolver) ExecuteBy(job job, task task) {
-	resolver.Execute(int(job), int(task))
+func (r *Resolver) ExecuteBy(job int, task task) {
+	r.Execute(job, int(task))
 }
 
-func (s *Resolver) Copy() Resolver {
-	return Resolver{State: s.State.Copy()}
+func (r *Resolver) Copy() Resolver {
+	return Resolver{State: r.State.Copy()}
 }
 
-func (r *Resolver) nextTaskWave() (tasks TaskWave) {
-	tasks = make(TaskWave)
+func (r *Resolver) nextTaskWave() TaskWave {
+	tasks := make(TaskWave, len(r.Jobs))
 
 	for i := 0; i < len(r.Jobs); i++ {
 		if taskIndex, ok := r.NextTaskIndexOf(i); ok {
@@ -39,7 +39,7 @@ func (r *Resolver) nextTaskWave() (tasks TaskWave) {
 		}
 	}
 
-	return
+	return tasks
 }
 
 func (r *Resolver) Next() Resolver {
@@ -50,33 +50,37 @@ func (r *Resolver) Next() Resolver {
 	return choice
 }
 
-func (resolver *Resolver) GreedChoice(tasks TaskWave) Resolver {
+func (r *Resolver) GreedChoice(tasks TaskWave) Resolver {
 	var best *Resolver
-	copy := resolver.Copy()
+	copy := r.Copy()
 
 	for job, task := range tasks {
+		if task == nil {
+			continue
+		}
 
-		resolver.ExecuteBy(job, task)
+		task := *task
+		r.ExecuteBy(job, task)
 
 		if best == nil {
 			best = &copy
 			best.ExecuteBy(job, task)
-		} else if resolver.IsBetterThan(*best) {
+		} else if r.IsBetterThan(*best) {
 			best.Undo()
 			best.ExecuteBy(job, task)
 		}
 
-		resolver.Undo()
+		r.Undo()
 
 	}
 
 	return *best
 }
 
-func (s Resolver) FindSolution() state.State {
+func (r Resolver) FindSolution() state.State {
 	var currentState Resolver
 
-	for currentState = s; !currentState.IsFinish(); currentState = currentState.Next() {
+	for currentState = r; !currentState.IsFinish(); currentState = currentState.Next() {
 
 	}
 
