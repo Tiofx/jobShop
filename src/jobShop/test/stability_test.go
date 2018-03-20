@@ -9,11 +9,11 @@ import (
 	"fmt"
 	"jobShop/initSolution/taskWaveByMachineGreed"
 	"jobShop/tabuSearch"
+	"path"
+	"os"
 )
 
-func init() {
-	testDir = "/Users/andrej/GoglandProjects/job-shop/testinstances"
-}
+func init() { os.Chdir(path.Join(path.Dir("../../../"))) }
 
 func TestStabilityOfSimpleGreed(t *testing.T) {
 	testCase := someRandomTests()
