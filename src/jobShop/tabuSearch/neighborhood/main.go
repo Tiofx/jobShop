@@ -1,7 +1,7 @@
 package neighborhood
 
 type Neighborhood interface {
-	Generator() (iterator <-chan Move)
+	Generate() []Move
 }
 
 type Empty struct{}

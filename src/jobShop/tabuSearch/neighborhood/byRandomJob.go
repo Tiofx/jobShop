@@ -17,7 +17,7 @@ func NewByRandomJob(jobState *state.State, graph *graph_state.DisjunctiveGraph) 
 	}
 }
 
-func (r ByRandomJob) Generator() (iterator <-chan Move) {
+func (r ByRandomJob) Generate() []Move {
 	randomJob := job(rand.Int() % len(r.JobState.Jobs))
 	tasks := r.taskPositionFor(randomJob)
 

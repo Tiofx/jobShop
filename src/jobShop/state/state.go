@@ -30,18 +30,16 @@ func (rd *redoData) deconstruct() (job, task int, machine Machine, jobTimeWave, 
 }
 
 func (s *State) saveForRedo(job int, task int) {
-	machine, _ := s.Jobs[job][task].Deconstruct()
+	machine := s.Jobs[job][task].Machine
 
-	s.redoData = redoData{
-		job:     job,
-		task:    task,
-		machine: machine,
+	s.redoData.job = job
+	s.redoData.task = task
+	s.redoData.machine = machine
 
-		jobTimeWave:     s.JobTimeWave[job],
-		machineTimeWave: s.MachineTimeWave[machine],
-		leftTotalTime:   s.LeftTotalTime[job],
-		executed:        s.Executed[job],
-	}
+	s.redoData.jobTimeWave = s.JobTimeWave[job]
+	s.redoData.machineTimeWave = s.MachineTimeWave[machine]
+	s.redoData.leftTotalTime = s.LeftTotalTime[job]
+	s.redoData.executed = s.Executed[job]
 }
 
 func NewState(jobs Jobs) State {

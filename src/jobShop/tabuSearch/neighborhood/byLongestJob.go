@@ -32,7 +32,7 @@ func (r ByLongestJob) criticalJob() job {
 	return job(criticalJob)
 }
 
-func (r ByLongestJob) Generator() (iterator <-chan Move) {
+func (r ByLongestJob) Generate() []Move {
 	criticalJob := r.criticalJob()
 	tasks := r.taskPositionFor(criticalJob)
 

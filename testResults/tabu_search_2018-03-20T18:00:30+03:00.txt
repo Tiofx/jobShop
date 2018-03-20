@@ -1,0 +1,918 @@
+tabu search: 5000 iterations, 32 without changes iteration
+first solution by task wave with max 3
+== Total test number: 53
+==============================
+========== Test №1 ===========
+==============================
+----- Short test description -----
+file name:			abz5.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		1234
+----------------------------------
+------------ Result --------------
+expected makespan: 1234
+actual makespan:   1290
+how much worse:    4.54%
+elapsed time is    331.601ms
+----------------------------------
+==============================
+========== Test №2 ===========
+==============================
+----- Short test description -----
+file name:			abz6.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		943
+----------------------------------
+------------ Result --------------
+expected makespan: 943
+actual makespan:   1074
+how much worse:    13.89%
+elapsed time is    340.09ms
+----------------------------------
+==============================
+========== Test №3 ===========
+==============================
+----- Short test description -----
+file name:			abz7.txt
+job number:  		20
+avg. task number:	15
+total task number: 	300
+machine number:		15
+optimum:     		651
+----------------------------------
+------------ Result --------------
+expected makespan: 651
+actual makespan:   836
+how much worse:    28.42%
+elapsed time is    3.207776s
+----------------------------------
+==============================
+========== Test №4 ===========
+==============================
+----- Short test description -----
+file name:			abz8.txt
+job number:  		20
+avg. task number:	15
+total task number: 	300
+machine number:		15
+optimum:     		627
+----------------------------------
+------------ Result --------------
+expected makespan: 627
+actual makespan:   902
+how much worse:    43.86%
+elapsed time is    3.87383s
+----------------------------------
+==============================
+========== Test №5 ===========
+==============================
+----- Short test description -----
+file name:			abz9.txt
+job number:  		20
+avg. task number:	15
+total task number: 	300
+machine number:		15
+optimum:     		650
+----------------------------------
+------------ Result --------------
+expected makespan: 650
+actual makespan:   831
+how much worse:    27.85%
+elapsed time is    4.745554s
+----------------------------------
+==============================
+========== Test №6 ===========
+==============================
+----- Short test description -----
+file name:			ft06.txt
+job number:  		6
+avg. task number:	6
+total task number: 	36
+machine number:		6
+optimum:     		55
+----------------------------------
+------------ Result --------------
+expected makespan: 55
+actual makespan:   57
+how much worse:    3.64%
+elapsed time is    41.321ms
+----------------------------------
+==============================
+========== Test №7 ===========
+==============================
+----- Short test description -----
+file name:			ft10.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		930
+----------------------------------
+------------ Result --------------
+expected makespan: 930
+actual makespan:   1088
+how much worse:    16.99%
+elapsed time is    327.262ms
+----------------------------------
+==============================
+========== Test №8 ===========
+==============================
+----- Short test description -----
+file name:			ft20.txt
+job number:  		20
+avg. task number:	5
+total task number: 	100
+machine number:		5
+optimum:     		1165
+----------------------------------
+------------ Result --------------
+expected makespan: 1165
+actual makespan:   1392
+how much worse:    19.48%
+elapsed time is    860.745ms
+----------------------------------
+==============================
+========== Test №9 ===========
+==============================
+----- Short test description -----
+file name:			la01.txt
+job number:  		10
+avg. task number:	5
+total task number: 	50
+machine number:		5
+optimum:     		666
+----------------------------------
+------------ Result --------------
+expected makespan: 666
+actual makespan:   851
+how much worse:    27.78%
+elapsed time is    85.137ms
+----------------------------------
+==============================
+========== Test №10 ===========
+==============================
+----- Short test description -----
+file name:			la02.txt
+job number:  		10
+avg. task number:	5
+total task number: 	50
+machine number:		5
+optimum:     		655
+----------------------------------
+------------ Result --------------
+expected makespan: 655
+actual makespan:   743
+how much worse:    13.44%
+elapsed time is    97.671ms
+----------------------------------
+==============================
+========== Test №11 ===========
+==============================
+----- Short test description -----
+file name:			la03.txt
+job number:  		10
+avg. task number:	5
+total task number: 	50
+machine number:		5
+optimum:     		597
+----------------------------------
+------------ Result --------------
+expected makespan: 597
+actual makespan:   674
+how much worse:    12.90%
+elapsed time is    152.376ms
+----------------------------------
+==============================
+========== Test №12 ===========
+==============================
+----- Short test description -----
+file name:			la04.txt
+job number:  		10
+avg. task number:	5
+total task number: 	50
+machine number:		5
+optimum:     		590
+----------------------------------
+------------ Result --------------
+expected makespan: 590
+actual makespan:   651
+how much worse:    10.34%
+elapsed time is    140.29ms
+----------------------------------
+==============================
+========== Test №13 ===========
+==============================
+----- Short test description -----
+file name:			la05.txt
+job number:  		10
+avg. task number:	5
+total task number: 	50
+machine number:		5
+optimum:     		593
+----------------------------------
+------------ Result --------------
+expected makespan: 593
+actual makespan:   593
+how much worse:    0.00%
+elapsed time is    163.472ms
+----------------------------------
+==============================
+========== Test №14 ===========
+==============================
+----- Short test description -----
+file name:			la06.txt
+job number:  		15
+avg. task number:	5
+total task number: 	75
+machine number:		5
+optimum:     		926
+----------------------------------
+------------ Result --------------
+expected makespan: 926
+actual makespan:   939
+how much worse:    1.40%
+elapsed time is    215.027ms
+----------------------------------
+==============================
+========== Test №15 ===========
+==============================
+----- Short test description -----
+file name:			la07.txt
+job number:  		15
+avg. task number:	5
+total task number: 	75
+machine number:		5
+optimum:     		890
+----------------------------------
+------------ Result --------------
+expected makespan: 890
+actual makespan:   959
+how much worse:    7.75%
+elapsed time is    233.858ms
+----------------------------------
+==============================
+========== Test №16 ===========
+==============================
+----- Short test description -----
+file name:			la08.txt
+job number:  		15
+avg. task number:	5
+total task number: 	75
+machine number:		5
+optimum:     		863
+----------------------------------
+------------ Result --------------
+expected makespan: 863
+actual makespan:   958
+how much worse:    11.01%
+elapsed time is    195.329ms
+----------------------------------
+==============================
+========== Test №17 ===========
+==============================
+----- Short test description -----
+file name:			la09.txt
+job number:  		15
+avg. task number:	5
+total task number: 	75
+machine number:		5
+optimum:     		951
+----------------------------------
+------------ Result --------------
+expected makespan: 951
+actual makespan:   1080
+how much worse:    13.56%
+elapsed time is    209.427ms
+----------------------------------
+==============================
+========== Test №18 ===========
+==============================
+----- Short test description -----
+file name:			la10.txt
+job number:  		15
+avg. task number:	5
+total task number: 	75
+machine number:		5
+optimum:     		958
+----------------------------------
+------------ Result --------------
+expected makespan: 958
+actual makespan:   961
+how much worse:    0.31%
+elapsed time is    344.881ms
+----------------------------------
+==============================
+========== Test №19 ===========
+==============================
+----- Short test description -----
+file name:			la11.txt
+job number:  		20
+avg. task number:	5
+total task number: 	100
+machine number:		5
+optimum:     		1222
+----------------------------------
+------------ Result --------------
+expected makespan: 1222
+actual makespan:   1310
+how much worse:    7.20%
+elapsed time is    444.009ms
+----------------------------------
+==============================
+========== Test №20 ===========
+==============================
+----- Short test description -----
+file name:			la12.txt
+job number:  		20
+avg. task number:	5
+total task number: 	100
+machine number:		5
+optimum:     		1039
+----------------------------------
+------------ Result --------------
+expected makespan: 1039
+actual makespan:   1043
+how much worse:    0.38%
+elapsed time is    855.874ms
+----------------------------------
+==============================
+========== Test №21 ===========
+==============================
+----- Short test description -----
+file name:			la13.txt
+job number:  		20
+avg. task number:	5
+total task number: 	100
+machine number:		5
+optimum:     		1150
+----------------------------------
+------------ Result --------------
+expected makespan: 1150
+actual makespan:   1204
+how much worse:    4.70%
+elapsed time is    432.422ms
+----------------------------------
+==============================
+========== Test №22 ===========
+==============================
+----- Short test description -----
+file name:			la14.txt
+job number:  		20
+avg. task number:	5
+total task number: 	100
+machine number:		5
+optimum:     		1292
+----------------------------------
+------------ Result --------------
+expected makespan: 1292
+actual makespan:   1292
+how much worse:    0.00%
+elapsed time is    470.208ms
+----------------------------------
+==============================
+========== Test №23 ===========
+==============================
+----- Short test description -----
+file name:			la15.txt
+job number:  		20
+avg. task number:	5
+total task number: 	100
+machine number:		5
+optimum:     		1207
+----------------------------------
+------------ Result --------------
+expected makespan: 1207
+actual makespan:   1329
+how much worse:    10.11%
+elapsed time is    615.86ms
+----------------------------------
+==============================
+========== Test №24 ===========
+==============================
+----- Short test description -----
+file name:			la16.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		945
+----------------------------------
+------------ Result --------------
+expected makespan: 945
+actual makespan:   1159
+how much worse:    22.65%
+elapsed time is    199.588ms
+----------------------------------
+==============================
+========== Test №25 ===========
+==============================
+----- Short test description -----
+file name:			la17.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		784
+----------------------------------
+------------ Result --------------
+expected makespan: 784
+actual makespan:   880
+how much worse:    12.24%
+elapsed time is    186.683ms
+----------------------------------
+==============================
+========== Test №26 ===========
+==============================
+----- Short test description -----
+file name:			la18.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		848
+----------------------------------
+------------ Result --------------
+expected makespan: 848
+actual makespan:   970
+how much worse:    14.39%
+elapsed time is    342.992ms
+----------------------------------
+==============================
+========== Test №27 ===========
+==============================
+----- Short test description -----
+file name:			la19.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		842
+----------------------------------
+------------ Result --------------
+expected makespan: 842
+actual makespan:   1038
+how much worse:    23.28%
+elapsed time is    384.635ms
+----------------------------------
+==============================
+========== Test №28 ===========
+==============================
+----- Short test description -----
+file name:			la20.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		902
+----------------------------------
+------------ Result --------------
+expected makespan: 902
+actual makespan:   996
+how much worse:    10.42%
+elapsed time is    402.438ms
+----------------------------------
+==============================
+========== Test №29 ===========
+==============================
+----- Short test description -----
+file name:			la21.txt
+job number:  		15
+avg. task number:	10
+total task number: 	150
+machine number:		10
+optimum:     		1040
+----------------------------------
+------------ Result --------------
+expected makespan: 1040
+actual makespan:   1367
+how much worse:    31.44%
+elapsed time is    550.185ms
+----------------------------------
+==============================
+========== Test №30 ===========
+==============================
+----- Short test description -----
+file name:			la22.txt
+job number:  		15
+avg. task number:	10
+total task number: 	150
+machine number:		10
+optimum:     		927
+----------------------------------
+------------ Result --------------
+expected makespan: 927
+actual makespan:   1279
+how much worse:    37.97%
+elapsed time is    598.327ms
+----------------------------------
+==============================
+========== Test №31 ===========
+==============================
+----- Short test description -----
+file name:			la23.txt
+job number:  		15
+avg. task number:	10
+total task number: 	150
+machine number:		10
+optimum:     		1032
+----------------------------------
+------------ Result --------------
+expected makespan: 1032
+actual makespan:   1405
+how much worse:    36.14%
+elapsed time is    683.261ms
+----------------------------------
+==============================
+========== Test №32 ===========
+==============================
+----- Short test description -----
+file name:			la24.txt
+job number:  		15
+avg. task number:	10
+total task number: 	150
+machine number:		10
+optimum:     		935
+----------------------------------
+------------ Result --------------
+expected makespan: 935
+actual makespan:   1255
+how much worse:    34.22%
+elapsed time is    930.872ms
+----------------------------------
+==============================
+========== Test №33 ===========
+==============================
+----- Short test description -----
+file name:			la25.txt
+job number:  		15
+avg. task number:	10
+total task number: 	150
+machine number:		10
+optimum:     		977
+----------------------------------
+------------ Result --------------
+expected makespan: 977
+actual makespan:   1237
+how much worse:    26.61%
+elapsed time is    1.053591s
+----------------------------------
+==============================
+========== Test №34 ===========
+==============================
+----- Short test description -----
+file name:			la26.txt
+job number:  		20
+avg. task number:	10
+total task number: 	200
+machine number:		10
+optimum:     		1218
+----------------------------------
+------------ Result --------------
+expected makespan: 1218
+actual makespan:   1605
+how much worse:    31.77%
+elapsed time is    1.790914s
+----------------------------------
+==============================
+========== Test №35 ===========
+==============================
+----- Short test description -----
+file name:			la27.txt
+job number:  		20
+avg. task number:	10
+total task number: 	200
+machine number:		10
+optimum:     		1235
+----------------------------------
+------------ Result --------------
+expected makespan: 1235
+actual makespan:   1674
+how much worse:    35.55%
+elapsed time is    2.153239s
+----------------------------------
+==============================
+========== Test №36 ===========
+==============================
+----- Short test description -----
+file name:			la28.txt
+job number:  		20
+avg. task number:	10
+total task number: 	200
+machine number:		10
+optimum:     		1216
+----------------------------------
+------------ Result --------------
+expected makespan: 1216
+actual makespan:   1660
+how much worse:    36.51%
+elapsed time is    3.201709s
+----------------------------------
+==============================
+========== Test №37 ===========
+==============================
+----- Short test description -----
+file name:			la29.txt
+job number:  		20
+avg. task number:	10
+total task number: 	200
+machine number:		10
+optimum:     		1120
+----------------------------------
+------------ Result --------------
+expected makespan: 1120
+actual makespan:   1516
+how much worse:    35.36%
+elapsed time is    2.592214s
+----------------------------------
+==============================
+========== Test №38 ===========
+==============================
+----- Short test description -----
+file name:			la30.txt
+job number:  		20
+avg. task number:	10
+total task number: 	200
+machine number:		10
+optimum:     		1355
+----------------------------------
+------------ Result --------------
+expected makespan: 1355
+actual makespan:   1719
+how much worse:    26.86%
+elapsed time is    1.954083s
+----------------------------------
+==============================
+========== Test №39 ===========
+==============================
+----- Short test description -----
+file name:			la31.txt
+job number:  		30
+avg. task number:	10
+total task number: 	300
+machine number:		10
+optimum:     		1784
+----------------------------------
+------------ Result --------------
+expected makespan: 1784
+actual makespan:   2058
+how much worse:    15.36%
+elapsed time is    8.98157s
+----------------------------------
+==============================
+========== Test №40 ===========
+==============================
+----- Short test description -----
+file name:			la32.txt
+job number:  		30
+avg. task number:	10
+total task number: 	300
+machine number:		10
+optimum:     		1850
+----------------------------------
+------------ Result --------------
+expected makespan: 1850
+actual makespan:   2665
+how much worse:    44.05%
+elapsed time is    5.315368s
+----------------------------------
+==============================
+========== Test №41 ===========
+==============================
+----- Short test description -----
+file name:			la33.txt
+job number:  		30
+avg. task number:	10
+total task number: 	300
+machine number:		10
+optimum:     		1719
+----------------------------------
+------------ Result --------------
+expected makespan: 1719
+actual makespan:   2259
+how much worse:    31.41%
+elapsed time is    5.958457s
+----------------------------------
+==============================
+========== Test №42 ===========
+==============================
+----- Short test description -----
+file name:			la34.txt
+job number:  		30
+avg. task number:	10
+total task number: 	300
+machine number:		10
+optimum:     		1721
+----------------------------------
+------------ Result --------------
+expected makespan: 1721
+actual makespan:   2322
+how much worse:    34.92%
+elapsed time is    6.585609s
+----------------------------------
+==============================
+========== Test №43 ===========
+==============================
+----- Short test description -----
+file name:			la35.txt
+job number:  		30
+avg. task number:	10
+total task number: 	300
+machine number:		10
+optimum:     		1888
+----------------------------------
+------------ Result --------------
+expected makespan: 1888
+actual makespan:   2333
+how much worse:    23.57%
+elapsed time is    8.566175s
+----------------------------------
+==============================
+========== Test №44 ===========
+==============================
+----- Short test description -----
+file name:			la36.txt
+job number:  		15
+avg. task number:	15
+total task number: 	225
+machine number:		15
+optimum:     		1268
+----------------------------------
+------------ Result --------------
+expected makespan: 1268
+actual makespan:   1614
+how much worse:    27.29%
+elapsed time is    1.322319s
+----------------------------------
+==============================
+========== Test №45 ===========
+==============================
+----- Short test description -----
+file name:			la37.txt
+job number:  		15
+avg. task number:	15
+total task number: 	225
+machine number:		15
+optimum:     		1397
+----------------------------------
+------------ Result --------------
+expected makespan: 1397
+actual makespan:   1747
+how much worse:    25.05%
+elapsed time is    958.652ms
+----------------------------------
+==============================
+========== Test №46 ===========
+==============================
+----- Short test description -----
+file name:			la38.txt
+job number:  		15
+avg. task number:	15
+total task number: 	225
+machine number:		15
+optimum:     		1171
+----------------------------------
+------------ Result --------------
+expected makespan: 1171
+actual makespan:   1636
+how much worse:    39.71%
+elapsed time is    1.803735s
+----------------------------------
+==============================
+========== Test №47 ===========
+==============================
+----- Short test description -----
+file name:			la39.txt
+job number:  		15
+avg. task number:	15
+total task number: 	225
+machine number:		15
+optimum:     		1233
+----------------------------------
+------------ Result --------------
+expected makespan: 1233
+actual makespan:   1545
+how much worse:    25.30%
+elapsed time is    973.582ms
+----------------------------------
+==============================
+========== Test №48 ===========
+==============================
+----- Short test description -----
+file name:			la40.txt
+job number:  		15
+avg. task number:	15
+total task number: 	225
+machine number:		15
+optimum:     		1233
+----------------------------------
+------------ Result --------------
+expected makespan: 1233
+actual makespan:   1562
+how much worse:    26.68%
+elapsed time is    1.665594s
+----------------------------------
+==============================
+========== Test №49 ===========
+==============================
+----- Short test description -----
+file name:			orb01.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		1059
+----------------------------------
+------------ Result --------------
+expected makespan: 1059
+actual makespan:   1259
+how much worse:    18.89%
+elapsed time is    222.259ms
+----------------------------------
+==============================
+========== Test №50 ===========
+==============================
+----- Short test description -----
+file name:			orb02.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		888
+----------------------------------
+------------ Result --------------
+expected makespan: 888
+actual makespan:   980
+how much worse:    10.36%
+elapsed time is    383.892ms
+----------------------------------
+==============================
+========== Test №51 ===========
+==============================
+----- Short test description -----
+file name:			orb03.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		1005
+----------------------------------
+------------ Result --------------
+expected makespan: 1005
+actual makespan:   1224
+how much worse:    21.79%
+elapsed time is    318.589ms
+----------------------------------
+==============================
+========== Test №52 ===========
+==============================
+----- Short test description -----
+file name:			orb04.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		1005
+----------------------------------
+------------ Result --------------
+expected makespan: 1005
+actual makespan:   1108
+how much worse:    10.25%
+elapsed time is    232.686ms
+----------------------------------
+==============================
+========== Test №53 ===========
+==============================
+----- Short test description -----
+file name:			orb05.txt
+job number:  		10
+avg. task number:	10
+total task number: 	100
+machine number:		10
+optimum:     		887
+----------------------------------
+------------ Result --------------
+expected makespan: 887
+actual makespan:   1079
+how much worse:    21.65%
+elapsed time is    248.223ms
+----------------------------------
+==============================
+======== Statistics ==========
+==============================
+-- Result error statistics:
+avg.:  20.21%
+best:  0.00%
+worst: 44.05%
+---------------------------
+-- Time statistics:
+total: 1m18.945461s
+mean:  1.489537s
+min:   41.321ms
+max:   8.98157s
+---------------------------

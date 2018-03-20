@@ -31,25 +31,24 @@ func (r byJob) taskPositionFor(critical job) criticalTasks {
 	return tasks
 }
 
-func (r byJob) generateFor(tasks criticalTasks) (iterator <-chan Move) {
-	ch := make(chan Move)
+func (r byJob) generateFor(tasks criticalTasks) []Move {
+	var res []Move
 
-	go func(consumer chan<- Move) {
-		defer close(consumer)
+	for machine := 0; machine < r.JobState.Jobs.MachineNumber(); machine++ {
+		machine := base.Machine(machine)
+		tasksOfMachine := tasks[machine]
 
-		for machine := 0; machine < r.JobState.Jobs.MachineNumber(); machine++ {
-			machine := base.Machine(machine)
-			tasksOfMachine := tasks[machine]
-
-			for _, task := range tasksOfMachine {
-				for taskIndex := range (*r.Graph)[machine] {
-					if taskIndex != int(task) {
-						consumer <- Move{Machine: int(machine), I: taskIndex, J: int(task)}
-					}
+		for _, task := range tasksOfMachine {
+			for taskIndex := range (*r.Graph)[machine] {
+				if taskIndex != int(task) && !r.theSameJob(machine, taskIndex, task) {
+					res = append(res, Move{Machine: int(machine), I: taskIndex, J: int(task)})
 				}
 			}
 		}
-	}(ch)
+	}
 
-	return ch
+	return res
+}
+func (r byJob) theSameJob(machine base.Machine, taskIndex int, task taskPosition) bool {
+	return (*r.Graph)[machine][taskIndex] == (*r.Graph)[machine][task]
 }
