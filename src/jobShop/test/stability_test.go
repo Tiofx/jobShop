@@ -7,13 +7,13 @@ import (
 	"jobShop/initSolution/simpleGreed"
 	"reflect"
 	"fmt"
-	"math/rand"
 	"jobShop/initSolution/taskWaveByMachineGreed"
+	"jobShop/tabuSearch"
+	"path"
+	"os"
 )
 
-func init() {
-	testDir = "/Users/andrej/GoglandProjects/job-shop/testinstances"
-}
+func init() { os.Chdir(path.Join(path.Dir("../../../"))) }
 
 func TestStabilityOfSimpleGreed(t *testing.T) {
 	testCase := someRandomTests()
@@ -35,6 +35,22 @@ func TestStabilityOfSecondGreedAlgorithm(t *testing.T) {
 	testStability(t, testCase, solver)
 }
 
+func TestStabilityOfTabuSearch(t *testing.T) {
+	testCase := someRandomTests()
+	solver := func(jobs base.Jobs) state.State {
+		initState := simpleGreed.Resolver{State: state.NewState(jobs)}
+		solution := initState.FindSolution()
+		solver := tabuSearch.NewSolver(solution)
+
+		for i := 0; i < 100; i++ {
+			solver.Next()
+		}
+		return solver.GetBest().JobState
+	}
+
+	testStability(t, testCase, solver)
+}
+
 func testStability(t *testing.T, tests []testCase, solver func(jobs base.Jobs) state.State) {
 	res1 := test(solver, tests...)
 	res2 := test(solver, tests...)
@@ -50,8 +66,4 @@ func testStability(t *testing.T, tests []testCase, solver func(jobs base.Jobs) s
 	}
 }
 
-func someRandomTests() []testCase {
-	t1, t2, t3 := rand.Intn(testsNumber()), rand.Intn(testsNumber()), rand.Intn(testsNumber())
-	all := allTestsCases()
-	return []testCase{all[t1], all[t2], all[t3]}
-}
+func someRandomTests() []testCase { return []testCase{randomTest(), randomTest(), randomTest()} }

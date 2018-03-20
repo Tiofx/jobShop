@@ -37,7 +37,10 @@ func (r byJob) generateFor(tasks criticalTasks) (iterator <-chan Move) {
 	go func(consumer chan<- Move) {
 		defer close(consumer)
 
-		for machine, tasksOfMachine := range tasks {
+		for machine := 0; machine < r.JobState.Jobs.MachineNumber(); machine++ {
+			machine := base.Machine(machine)
+			tasksOfMachine := tasks[machine]
+
 			for _, task := range tasksOfMachine {
 				for taskIndex := range (*r.Graph)[machine] {
 					if taskIndex != int(task) {
