@@ -19,7 +19,7 @@ func NewByAll(jobState *state.State, graph *graph_state.DisjunctiveGraph) ByAll 
 func (r ByAll) Generate() []Move {
 	var res []Move
 
-	for machine, jobList := range (*r.Graph) {
+	for machine, jobList := range *r.Graph {
 		for i, jobI := range jobList {
 			for _, jobJ := range jobList[i+1:] {
 				res = append(res, Move{Machine: int(machine), I: int(jobI), J: int(jobJ)})

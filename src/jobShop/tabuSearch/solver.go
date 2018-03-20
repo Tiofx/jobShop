@@ -5,7 +5,6 @@ import (
 	"jobShop/state"
 	"math"
 	. "jobShop/tabuSearch/neighborhood"
-	"jobShop/tabuSearch/neighborhood"
 	"jobShop/tabuSearch/graph_state"
 )
 
@@ -16,6 +15,10 @@ type Solver struct {
 
 	bestLocal    *Neighbour
 	bestSolution *Neighbour
+
+	maxIteration            int
+	iterationWithoutChanges int
+	maxWithoutChanges       int
 }
 
 func (s *Solver) GetBest() *Neighbour {
@@ -38,7 +41,7 @@ func (s *Solver) BestMakespan() int {
 	return s.bestSolution.Makespan()
 }
 
-func NewSolver(state state.State) Solver {
+func NewSolver(state state.State, maxIteration, maxWithoutChanges int) Solver {
 	initialSolution := graph_state.From(state)
 	best := Neighbour{
 		JobState: state,
@@ -49,18 +52,20 @@ func NewSolver(state state.State) Solver {
 	best.CopyIn(&bestCopy)
 
 	return Solver{
-		jobs:            state.Jobs,
-		CurrentSolution: &best,
-		bestSolution:    &bestCopy,
-		tabuList:        &tabuList{},
+		jobs:              state.Jobs,
+		CurrentSolution:   &best,
+		bestSolution:      &bestCopy,
+		tabuList:          &tabuList{},
+		maxIteration:      maxIteration,
+		maxWithoutChanges: maxWithoutChanges,
 	}
 }
 
 func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 	s.bestLocal = nil
-	iterator := neighborhood.NewByCriticalPath(&s.CurrentSolution.JobState, &s.CurrentSolution.Graph)
+	iterator := NewByCriticalPath(&s.CurrentSolution.JobState, &s.CurrentSolution.Graph)
 
-	for move := range iterator.Generator() {
+	for _, move := range iterator.Generate() {
 		s.CurrentSolution.Apply(move)
 
 		//TODO: optimize, make checking in tabu before update graph
@@ -82,8 +87,7 @@ func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 				s.CurrentSolution.CopyIn(s.bestLocal)
 				bestMove = move
 
-			} else if s.CurrentSolution.Makespan() < s.bestLocal.Makespan() &&
-				!s.tabuList.Contain(move) {
+			} else if s.CurrentSolution.Makespan() < s.bestLocal.Makespan() {
 
 				bestMove = move
 				s.CurrentSolution.CopyIn(s.bestLocal)
@@ -107,6 +111,7 @@ func (s *Solver) Next() {
 	}
 
 	if !isBestSolutionChanged {
+		s.iterationWithoutChanges++
 
 		if s.bestLocal != nil {
 			s.tabuList.Add(bestMove)
@@ -129,7 +134,15 @@ func (s *Solver) Next() {
 		}
 
 	} else {
+		s.iterationWithoutChanges = 0
 		s.tabuList.Add(bestMove)
 		s.bestSolution.CopyIn(s.CurrentSolution)
 	}
+}
+
+func (s *Solver) FindSolution() state.State {
+	for i := 0; i < s.maxIteration && s.iterationWithoutChanges < s.maxWithoutChanges; i++ {
+		s.Next()
+	}
+	return s.GetBest().JobState
 }
