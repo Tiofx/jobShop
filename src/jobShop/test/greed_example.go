@@ -47,27 +47,19 @@ func ExampleTabuSearch() {
 		//initState := simpleGreed.Resolver{State: state.NewState(jobs)}
 		solution := initState.FindSolution()
 		solver := tabuSearch.NewSolver(solution)
+		solver := tabuSearch.NewSolver(solution, iterationNumber, maxWithoutChanges)
 
-		//min := solver.BestMakespan()
-		//fmt.Println("==========================")
-		for i := 0; i < iterationNumber; i++ {
-			solver.Next()
-
-			//if solver.BestMakespan() < min {
-			//	min = solver.BestMakespan()
-			//	fmt.Println(i, " : ", min)
-			//}
-		}
-		return solver.GetBest().JobState
+		return solver.FindSolution()
 	}, testCase...)
 
 	fmt.Println(res)
 	saveResult("tabu_search", res,
-		fmt.Sprintf("tabu search: %v iterations\nfirst solution by task wave with max %v\n",
-			iterationNumber, max))
+		fmt.Sprintf("tabu search: %v iterations, max %v without changes iteration and after tabu reset\nfirst solution by task wave with max %v\n",
+			iterationNumber, maxWithoutChanges, max))
 }
 
 func saveResult(name string, res Results, description string) {
+	return
 	file, err := os.Create(fmt.Sprintf("./testResults/%v_%v.txt", name, time.Now().Format(time.RFC3339)))
 	if err != nil {
 		log.Fatal(err)
