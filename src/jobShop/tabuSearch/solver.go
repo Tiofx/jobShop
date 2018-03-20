@@ -60,10 +60,6 @@ func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 	s.bestLocal = nil
 	iterator := neighborhood.NewByCriticalPath(&s.CurrentSolution.JobState, &s.CurrentSolution.Graph)
 
-	//fmt.Println("best: ", s.BestMakespan())
-	//fmt.Println(s.CurrentSolution.Makespan(), " ", s.CurrentSolution.Graph)
-	//fmt.Println("current: ",s.CurrentSolution.Makespan())
-
 	for move := range iterator.Generator() {
 		s.CurrentSolution.Apply(move)
 
@@ -74,9 +70,6 @@ func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 		if success {
 			if s.CurrentSolution.Makespan() < s.bestSolution.Makespan() {
 				s.tabuList.Forget(move)
-				//s.bestLocal = &Neighbour{}
-				//s.CurrentSolution.CopyIn(s.bestLocal)
-				//bestMove = move
 			}
 
 			if s.tabuList.Contain(move) {
@@ -84,17 +77,13 @@ func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 				continue
 			}
 
-			//fmt.Println(s.CurrentSolution.Makespan(), "-move: ", move)
-
 			if s.bestLocal == nil {
 				s.bestLocal = &Neighbour{}
 				s.CurrentSolution.CopyIn(s.bestLocal)
 				bestMove = move
-				//fmt.Println(s.CurrentSolution.Makespan(), " first move: ", move)
 
 			} else if s.CurrentSolution.Makespan() < s.bestLocal.Makespan() &&
 				!s.tabuList.Contain(move) {
-				//fmt.Println(s.CurrentSolution.Makespan(), " move: ", move)
 
 				bestMove = move
 				s.CurrentSolution.CopyIn(s.bestLocal)
@@ -108,15 +97,7 @@ func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 }
 
 func (s *Solver) Next() {
-	//var current Neighbour
-	//s.CurrentSolution.copyIn(&current)
-
 	bestMove := s.setUpBestNeighbour()
-	//empty := neighborhood.Move{}
-	//if bestMove == empty {
-	//fmt.Println("empty")
-	//fmt.Println(s.bestLocal.Makespan())
-	//}
 
 	isBestSolutionChanged := false
 	if s.bestLocal != nil && s.bestLocal.Makespan() < s.BestMakespan() {
@@ -133,10 +114,6 @@ func (s *Solver) Next() {
 			s.bestLocal = nil
 
 		} else {
-			//fmt.Println("-- tabu: ", s.tabuList)
-			//fmt.Println(newMove)
-			//fmt.Println("-- tabu: ", s.tabuList)
-
 			for {
 				newMove := s.tabuList.ForgetOldest()
 				s.CurrentSolution.Apply(newMove)
@@ -155,6 +132,4 @@ func (s *Solver) Next() {
 		s.tabuList.Add(bestMove)
 		s.bestSolution.CopyIn(s.CurrentSolution)
 	}
-
-	//fmt.Println("tabu: ", s.tabuList)
 }

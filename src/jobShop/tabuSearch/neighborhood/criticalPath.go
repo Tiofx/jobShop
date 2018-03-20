@@ -24,13 +24,8 @@ func NewByCriticalPath(jobState *state.State, graph *graph_state.DisjunctiveGrap
 
 type pathNode struct{ time, maximumEarliestTime, minimumLatestTime int }
 
-func (pn *pathNode) slack() int {
-	return pn.minimumLatestTime - pn.maximumEarliestTime
-}
-
-func (pn *pathNode) isCritical() bool {
-	return pn.slack() == 0
-}
+func (pn *pathNode) slack() int       { return pn.minimumLatestTime - pn.maximumEarliestTime }
+func (pn *pathNode) isCritical() bool { return pn.slack() == 0 }
 
 func (pn *pathNode) reset() {
 	pn.maximumEarliestTime = 0
@@ -104,32 +99,21 @@ func (r ByCriticalPath) taskPosition() criticalTasks {
 		path.updateMLT(edge.from, edge.to)
 	}
 
-	//TODO: remove
-	//fmt.Println(edgeList)
-	//fmt.Println(edgeOrder)
-	//fmt.Println(reverseOrder)
-	//fmt.Println(path)
-	//fmt.Println(path.critical())
-
 	return path.formTasks(r.JobState.Jobs, *r.Graph)
 }
 
 func (r ByCriticalPath) Generator() (iterator <-chan Move) {
 	tasks := r.taskPosition()
-	//TODO: remove
-	//fmt.Println(tasks)
 
 	return r.generateFor(tasks)
 }
 
 // ==================================================================
-//
 
 func determinatePosition(jobs base.Jobs, graph graph_state.DisjunctiveGraph, job, task int) int {
 	position := onTheSameMachine(jobs, job, task)
 	machine := jobs[job][task].Machine
 	indexOnMachine := positionInMachine(graph, int(machine), job, position)
-	//fmt.Println(job, " ", task, " : ", position, " ", indexOnMachine)
 	return indexOnMachine
 }
 
@@ -162,7 +146,6 @@ func positionInMachine(graph graph_state.DisjunctiveGraph, machine, job, positio
 	panic("problem with positionInMachine")
 }
 
-//
 // ==================================================================
 
 type edgeList [][]int
@@ -173,11 +156,6 @@ func (el edgeList) String() string {
 		res += fmt.Sprintf("%v -> %v\n", nodeFrom, toList)
 	}
 	return res
-}
-
-func Test(jobs base.Jobs, jobsOrderOnMachine graph_state.DisjunctiveGraph) {
-	graph := newEdgeList(jobs, jobsOrderOnMachine)
-	graph.toposort(jobs, jobsOrderOnMachine)
 }
 
 func newEdgeList(jobs base.Jobs, jobsOrderOnMachine graph_state.DisjunctiveGraph) edgeList {
@@ -245,7 +223,7 @@ func (g *edgeList) setUpMore(graph graph_state.DisjunctiveGraph, jobs base.Jobs)
 		job := jobSequence[0]
 		nodeTo, exist := nextTask(int(job), indexOfNextTask[job], machine, jobs)
 		if !exist {
-			panic("no next node... AAAA")
+			panic("no next node...")
 		}
 		indexOfNextTask[job] = nodeTo
 
@@ -253,7 +231,7 @@ func (g *edgeList) setUpMore(graph graph_state.DisjunctiveGraph, jobs base.Jobs)
 			nextJob := jobSequence[i+1]
 			nodeTo, exist := nextTask(int(nextJob), indexOfNextTask[nextJob], machine, jobs)
 			if !exist {
-				panic("no next node... AAAA")
+				panic("no next node...")
 			}
 
 			indexOfNextTask[nextJob] = nodeTo
@@ -277,10 +255,8 @@ func updateNextTaskFor(indexOfNextTask []int, machine int, jobs base.Jobs) {
 }
 
 func nextTask(jobNumber, taskNumber, machine int, jobs base.Jobs) (nextTaskNumber int, exist bool) {
-	//for taskIndex, task := range jobs[jobNumber][taskNumber+1:] {
 	for taskIndex, task := range jobs[jobNumber] {
 		if machine == int(task.Machine) && taskIndex > taskNumber {
-			//nextTaskNumber = taskNumber + 1 + taskIndex
 			nextTaskNumber = taskIndex
 			return nextTaskNumber, true
 		}
