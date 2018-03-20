@@ -11,11 +11,16 @@ type Results []Result
 
 func (r Results) String() string {
 	outStr := ""
-
-	for _, result := range r {
-		outStr += result.String() + "\n"
+	outStr += fmt.Sprintf("== Total test number: %v\n", len(r))
+	for i, result := range r {
+		outStr += "==============================\n"
+		outStr += fmt.Sprintf("========== Test №%v ===========\n", i+1)
+		outStr += "==============================\n"
+		outStr += result.String()
 	}
 
+	outStr += "==============================\n"
+	outStr += "======== Statistics ==========\n"
 	outStr += "==============================\n"
 	outStr += r.resultErrorStrings()
 	outStr += r.timesStrings()
@@ -28,9 +33,9 @@ func (r Results) resultErrorStrings() string {
 	mean, min, max := r.ResultError()
 
 	outStr += "-- Result error statistics:\n"
-	outStr += fmt.Sprintf("mean: %.2f%%\n", mean*100)
-	outStr += fmt.Sprintf("min:  %.2f%%\n", min*100)
-	outStr += fmt.Sprintf("max:  %.2f%%\n", max*100)
+	outStr += fmt.Sprintf("avg.:  %.2f%%\n", mean*100)
+	outStr += fmt.Sprintf("best:  %.2f%%\n", min*100)
+	outStr += fmt.Sprintf("worst: %.2f%%\n", max*100)
 	outStr += "---------------------------\n"
 
 	return outStr
