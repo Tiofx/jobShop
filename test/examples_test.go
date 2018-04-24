@@ -1,11 +1,11 @@
 package test
 
 import (
-	"jobShop/base"
-	"jobShop/state"
-	"jobShop/initSolution/simpleGreed"
+	"github.com/Tiofx/jobShop/base"
+	"github.com/Tiofx/jobShop/state"
+	"github.com/Tiofx/jobShop/initSolution/simpleGreed"
 	"fmt"
-	"jobShop/initSolution/taskWaveByMachineGreed"
+	"github.com/Tiofx/jobShop/initSolution/taskWaveByMachineGreed"
 	"testing"
 )
 

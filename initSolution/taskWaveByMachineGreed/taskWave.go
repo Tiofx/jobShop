@@ -1,9 +1,9 @@
 package taskWaveByMachineGreed
 
 import (
-	. "jobShop/base"
+	. "github.com/Tiofx/jobShop/base"
 	"fmt"
-	"jobShop/state"
+	"github.com/Tiofx/jobShop/state"
 )
 
 type TaskInfo struct {

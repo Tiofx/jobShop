@@ -1,10 +1,10 @@
 package test
 
 import (
-	"jobShop/base"
-	"jobShop/state"
-	"jobShop/initSolution/taskWaveByMachineGreed"
-	"jobShop/tabuSearch"
+	"github.com/Tiofx/jobShop/base"
+	"github.com/Tiofx/jobShop/state"
+	"github.com/Tiofx/jobShop/initSolution/taskWaveByMachineGreed"
+	"github.com/Tiofx/jobShop/tabuSearch"
 	"fmt"
 	"os"
 	"time"

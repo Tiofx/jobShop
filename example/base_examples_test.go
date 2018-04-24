@@ -2,11 +2,11 @@ package example_test
 
 import (
 	"fmt"
-	"jobShop/base"
-	"jobShop/tabuSearch"
-	"jobShop/tabuSearch/graph_state"
-	"jobShop/initSolution/taskWaveByMachineGreed"
-	"jobShop/test"
+	"github.com/Tiofx/jobShop/base"
+	"github.com/Tiofx/jobShop/tabuSearch"
+	"github.com/Tiofx/jobShop/tabuSearch/graph_state"
+	"github.com/Tiofx/jobShop/initSolution/taskWaveByMachineGreed"
+	"github.com/Tiofx/jobShop/test"
 )
 
 func Example_initJobs() {

@@ -1,12 +1,12 @@
 package tabuSearch
 
 import (
-	"jobShop/base"
-	"jobShop/state"
+	"github.com/Tiofx/jobShop/base"
+	"github.com/Tiofx/jobShop/state"
 	"math"
-	. "jobShop/tabuSearch/neighborhood"
-	"jobShop/tabuSearch/graph_state"
-	"jobShop/initSolution/taskWaveByMachineGreed"
+	. "github.com/Tiofx/jobShop/tabuSearch/neighborhood"
+	"github.com/Tiofx/jobShop/tabuSearch/graph_state"
+	"github.com/Tiofx/jobShop/initSolution/taskWaveByMachineGreed"
 )
 
 type Solver struct {

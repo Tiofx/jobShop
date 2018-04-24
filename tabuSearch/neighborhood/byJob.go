@@ -1,10 +1,10 @@
 package neighborhood
 
 import (
-	"jobShop/base"
-	"jobShop/state"
-	"jobShop/tabuSearch/graph_state"
-	"jobShop/util"
+	"github.com/Tiofx/jobShop/base"
+	"github.com/Tiofx/jobShop/state"
+	"github.com/Tiofx/jobShop/tabuSearch/graph_state"
+	"github.com/Tiofx/jobShop/util"
 )
 
 type byJob struct {

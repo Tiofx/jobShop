@@ -1,8 +1,8 @@
 package graph_state
 
 import (
-	"jobShop/state"
-	"jobShop/base"
+	"github.com/Tiofx/jobShop/state"
+	"github.com/Tiofx/jobShop/base"
 	"fmt"
 )
 

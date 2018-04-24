@@ -1,8 +1,8 @@
 package test
 
 import (
-	"jobShop/base"
-	"jobShop/state"
+	"github.com/Tiofx/jobShop/base"
+	"github.com/Tiofx/jobShop/state"
 	"fmt"
 	"time"
 )

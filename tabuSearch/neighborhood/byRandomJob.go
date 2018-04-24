@@ -2,8 +2,8 @@ package neighborhood
 
 import (
 	"math/rand"
-	"jobShop/state"
-	"jobShop/tabuSearch/graph_state"
+	"github.com/Tiofx/jobShop/state"
+	"github.com/Tiofx/jobShop/tabuSearch/graph_state"
 )
 
 type ByRandomJob struct{ byJob }

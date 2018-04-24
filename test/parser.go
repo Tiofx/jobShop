@@ -1,7 +1,7 @@
 package test
 
 import (
-	"jobShop/base"
+	"github.com/Tiofx/jobShop/base"
 	"os"
 	"bufio"
 	"log"

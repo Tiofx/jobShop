@@ -1,8 +1,8 @@
 package neighborhood
 
 import (
-	"jobShop/state"
-	"jobShop/tabuSearch/graph_state"
+	"github.com/Tiofx/jobShop/state"
+	"github.com/Tiofx/jobShop/tabuSearch/graph_state"
 )
 
 type ByAll struct{ byJob }

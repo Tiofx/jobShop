@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"fmt"
-	"jobShop/base"
+	"github.com/Tiofx/jobShop/base"
 	"math/rand"
 )
 

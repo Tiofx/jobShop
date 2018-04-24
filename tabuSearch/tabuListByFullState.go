@@ -1,7 +1,7 @@
 package tabuSearch
 
 import (
-	. "jobShop/tabuSearch/neighborhood"
+	. "github.com/Tiofx/jobShop/tabuSearch/neighborhood"
 	"reflect"
 )
 

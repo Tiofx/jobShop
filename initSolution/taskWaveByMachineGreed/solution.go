@@ -1,8 +1,8 @@
 package taskWaveByMachineGreed
 
 import (
-	"jobShop/util"
-	. "jobShop/state"
+	"github.com/Tiofx/jobShop/util"
+	. "github.com/Tiofx/jobShop/state"
 )
 
 const OptimalPermutationLimit = 3

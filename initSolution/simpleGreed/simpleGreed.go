@@ -1,7 +1,7 @@
 package simpleGreed
 
 import (
-	"jobShop/state"
+	"github.com/Tiofx/jobShop/state"
 )
 
 type job int

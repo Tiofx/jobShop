@@ -1,8 +1,8 @@
 package state
 
 import (
-	"jobShop/util"
-	. "jobShop/base"
+	"github.com/Tiofx/jobShop/util"
+	. "github.com/Tiofx/jobShop/base"
 )
 
 type State struct {

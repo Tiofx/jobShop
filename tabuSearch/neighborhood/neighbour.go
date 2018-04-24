@@ -1,10 +1,10 @@
 package neighborhood
 
 import (
-	"jobShop/state"
+	"github.com/Tiofx/jobShop/state"
 	"github.com/getlantern/deepcopy"
-	"jobShop/util"
-	. "jobShop/tabuSearch/graph_state"
+	"github.com/Tiofx/jobShop/util"
+	. "github.com/Tiofx/jobShop/tabuSearch/graph_state"
 )
 
 type Neighbour struct {

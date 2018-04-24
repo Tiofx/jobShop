@@ -2,13 +2,13 @@ package test
 
 import (
 	"testing"
-	"jobShop/base"
-	"jobShop/state"
-	"jobShop/initSolution/simpleGreed"
+	"github.com/Tiofx/jobShop/base"
+	"github.com/Tiofx/jobShop/state"
+	"github.com/Tiofx/jobShop/initSolution/simpleGreed"
 	"reflect"
 	"fmt"
-	"jobShop/initSolution/taskWaveByMachineGreed"
-	"jobShop/tabuSearch"
+	"github.com/Tiofx/jobShop/initSolution/taskWaveByMachineGreed"
+	"github.com/Tiofx/jobShop/tabuSearch"
 	"path"
 	"os"
 )
