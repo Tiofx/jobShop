@@ -81,7 +81,7 @@ func Example_solution2() {
 }
 
 func Example_testCase() {
-	res := test.TabuSearch(taskWaveByMachineGreed.OptimalPermutationLimit, 1000, 32, 55, TestCaseNumber(6))[0]
+	res := test.TabuSearch(taskWaveByMachineGreed.OptimalPermutationLimit, 1000, 32, 55, test.TestCaseNumber(6))[0]
 	fmt.Println(res)
 
 	//Example of output:
