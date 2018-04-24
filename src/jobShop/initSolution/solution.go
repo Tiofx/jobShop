@@ -1,7 +1,10 @@
 package initSolution
 
-import "jobShop/base"
+import (
+	"jobShop/base"
+	"jobShop/state"
+)
 
 type Solver interface {
-	FindSolution() base.Scheduler
+	FindSolution() state.State
 }

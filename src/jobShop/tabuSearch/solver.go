@@ -6,6 +6,8 @@ import (
 	"math"
 	. "jobShop/tabuSearch/neighborhood"
 	"jobShop/tabuSearch/graph_state"
+	"fmt"
+	"jobShop/initSolution/taskWaveByMachineGreed"
 )
 
 type Solver struct {
@@ -18,7 +20,7 @@ type Solver struct {
 
 	maxIteration            int
 	iterationWithoutChanges int
-	maxWithoutChanges       int
+	maxWithoutImprovement   int
 }
 
 func (s *Solver) GetBest() *Neighbour {
@@ -41,7 +43,7 @@ func (s *Solver) BestMakespan() int {
 	return s.bestSolution.Makespan()
 }
 
-func NewSolver(state state.State, maxIteration, maxWithoutChanges int) Solver {
+func NewSolver(state state.State, memoryCapacity, maxIteration, maxWithoutImprovement int) Solver {
 	initialSolution := graph_state.From(state)
 	best := Neighbour{
 		JobState: state,
@@ -52,18 +54,20 @@ func NewSolver(state state.State, maxIteration, maxWithoutChanges int) Solver {
 	best.CopyIn(&bestCopy)
 
 	return Solver{
-		jobs:              state.Jobs,
-		CurrentSolution:   &best,
-		bestSolution:      &bestCopy,
-		tabuList:          &tabuList{},
-		maxIteration:      maxIteration,
-		maxWithoutChanges: maxWithoutChanges,
+		jobs:                  state.Jobs,
+		CurrentSolution:       &best,
+		bestSolution:          &bestCopy,
+		tabuList:              &tabuList{memoryCapacity: memoryCapacity},
+		maxIteration:          maxIteration,
+		maxWithoutImprovement: maxWithoutImprovement,
 	}
 }
 
 func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 	s.bestLocal = nil
 	iterator := NewByCriticalPath(&s.CurrentSolution.JobState, &s.CurrentSolution.Graph)
+
+	bestLocalMakespan := math.MaxInt64
 
 	for _, move := range iterator.Generate() {
 		s.CurrentSolution.Apply(move)
@@ -82,19 +86,21 @@ func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 				continue
 			}
 
-			if s.bestLocal == nil {
-				s.bestLocal = &Neighbour{}
-				s.CurrentSolution.CopyIn(s.bestLocal)
+			if s.CurrentSolution.Makespan() < bestLocalMakespan {
 				bestMove = move
-
-			} else if s.CurrentSolution.Makespan() < s.bestLocal.Makespan() {
-
-				bestMove = move
-				s.CurrentSolution.CopyIn(s.bestLocal)
+				bestLocalMakespan = s.CurrentSolution.Makespan()
 			}
+
 		}
 
 		s.CurrentSolution.Redo(move)
+	}
+
+	if bestLocalMakespan != math.MaxInt64 {
+		s.CurrentSolution.Apply(bestMove)
+		s.CurrentSolution.UpdateByGraph()
+
+		s.bestLocal = s.CurrentSolution
 	}
 
 	return
@@ -105,7 +111,7 @@ func (s *Solver) Next() {
 
 	isBestSolutionChanged := false
 	if s.bestLocal != nil && s.bestLocal.Makespan() < s.BestMakespan() {
-		s.bestSolution = s.bestLocal
+		s.bestLocal.CopyIn(s.bestSolution)
 		s.bestLocal = nil
 		isBestSolutionChanged = true
 	}
@@ -141,8 +147,15 @@ func (s *Solver) Next() {
 }
 
 func (s *Solver) FindSolution() state.State {
-	for i := 0; i < s.maxIteration && s.iterationWithoutChanges < s.maxWithoutChanges; i++ {
+	min := s.BestMakespan()
+
+	for i := 0; i < s.maxIteration && s.iterationWithoutChanges < s.maxWithoutImprovement; i++ {
 		s.Next()
+
+		if s.BestMakespan() < min {
+			min = s.BestMakespan()
+			fmt.Println(i, " : ", min)
+		}
 	}
 	return s.GetBest().JobState
 }

@@ -36,21 +36,21 @@ func testCaseNumber(index int) testCase {
 
 func simpleTestCase() testCase {
 	jobs := base.Jobs{
-		base.Job{
-			base.Task{0, 3},
-			base.Task{1, 2},
-			base.Task{2, 2},
+		{
+			{0, 3},
+			{1, 2},
+			{2, 2},
 		},
 
-		base.Job{
-			base.Task{Machine: 0, Time: 2},
-			base.Task{Machine: 2, Time: 1},
-			base.Task{Machine: 1, Time: 4},
+		{
+			{Machine: 0, Time: 2},
+			{Machine: 2, Time: 1},
+			{Machine: 1, Time: 4},
 		},
 
-		base.Job{
-			base.Task{1, 4},
-			base.Task{2, 3},
+		{
+			{1, 4},
+			{2, 3},
 		},
 	}
 
