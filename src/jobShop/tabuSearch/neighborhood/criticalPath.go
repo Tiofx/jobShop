@@ -102,7 +102,7 @@ func (r ByCriticalPath) taskPosition() criticalTasks {
 	return path.formTasks(r.JobState.Jobs, *r.Graph)
 }
 
-func (r ByCriticalPath) Generator() (iterator <-chan Move) {
+func (r ByCriticalPath) Generate() []Move {
 	tasks := r.taskPosition()
 
 	return r.generateFor(tasks)

@@ -5,6 +5,8 @@ import (
 	. "jobShop/state"
 )
 
+const OptimalPermutationLimit = 3
+
 type Resolver struct {
 	MaxTasksOnWave int
 	State

@@ -18,7 +18,7 @@ func init() { os.Chdir(path.Join(path.Dir("../../../"))) }
 func TestStabilityOfSimpleGreed(t *testing.T) {
 	testCase := someRandomTests()
 	solver := func(jobs base.Jobs) state.State {
-		initState := simpleGreed.Resolver{State: state.NewState(jobs)}
+		initState := simpleGreed.Resolver{State: state.New(jobs)}
 		return initState.FindSolution()
 	}
 
@@ -28,7 +28,7 @@ func TestStabilityOfSimpleGreed(t *testing.T) {
 func TestStabilityOfSecondGreedAlgorithm(t *testing.T) {
 	testCase := someRandomTests()
 	solver := func(jobs base.Jobs) state.State {
-		initState := taskWaveByMachineGreed.Resolver{MaxTasksOnWave: 3, State: state.NewState(jobs)}
+		initState := taskWaveByMachineGreed.Resolver{MaxTasksOnWave: 3, State: state.New(jobs)}
 		return initState.FindSolution()
 	}
 
@@ -38,9 +38,9 @@ func TestStabilityOfSecondGreedAlgorithm(t *testing.T) {
 func TestStabilityOfTabuSearch(t *testing.T) {
 	testCase := someRandomTests()
 	solver := func(jobs base.Jobs) state.State {
-		initState := simpleGreed.Resolver{State: state.NewState(jobs)}
+		initState := simpleGreed.Resolver{State: state.New(jobs)}
 		solution := initState.FindSolution()
-		solver := tabuSearch.NewSolver(solution)
+		solver := tabuSearch.NewSolver(solution, 44, 1111, 22)
 
 		for i := 0; i < 100; i++ {
 			solver.Next()

@@ -22,6 +22,7 @@ func (s *State) CopyIn(res *State) {
 	//copy(res.JobOrder, s.JobOrder)
 
 	deepcopy.Copy(res, s)
+
 	res.makespan = s.makespan
 	res.redoData = s.redoData
 

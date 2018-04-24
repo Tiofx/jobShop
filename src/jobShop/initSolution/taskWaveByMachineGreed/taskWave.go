@@ -3,6 +3,7 @@ package taskWaveByMachineGreed
 import (
 	. "jobShop/base"
 	"fmt"
+	"jobShop/state"
 )
 
 type TaskInfo struct {
@@ -12,7 +13,6 @@ type TaskInfo struct {
 
 type TaskInfoSet []TaskInfo
 
-//type TaskWave map[Machine]TaskInfoSet
 type TaskWave []TaskInfoSet
 
 func (tw TaskWave) Add(job int, task *Task) {
@@ -42,4 +42,19 @@ func (ti TaskInfo) String() string {
 	}
 
 	return fmt.Sprintf("{%v %v}", ti.Job, *ti.Task)
+}
+
+type StateBy state.State
+
+func (s StateBy) NextTaskWave() TaskWave {
+	tw := make(TaskWave, s.Jobs.MachineNumber())
+
+	for i := range s.Jobs {
+		s := state.State(s)
+		if task, ok := s.NextTaskOf(i); ok {
+			tw.Add(i, task)
+		}
+	}
+
+	return tw
 }

@@ -12,7 +12,8 @@ type TabuList interface {
 }
 
 type tabuList struct {
-	list []Move
+	memoryCapacity int
+	list           []Move
 }
 
 func (tabu *tabuList) IndexOf(move Move) (index int, exist bool) {
@@ -36,6 +37,10 @@ func (tabu *tabuList) Contain(move Move) bool {
 
 func (tabu *tabuList) Add(move Move) {
 	tabu.list = append(tabu.list, move)
+
+	if len(tabu.list) > tabu.memoryCapacity {
+		tabu.ForgetOldest()
+	}
 }
 
 func (tabu *tabuList) Forget(move Move) (success bool) {

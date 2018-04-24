@@ -5,6 +5,8 @@ import (
 	"jobShop/state"
 	"fmt"
 	"time"
+	"jobShop/initSolution/taskWaveByMachineGreed"
+	"jobShop/tabuSearch"
 )
 
 type Result struct {
@@ -54,3 +56,4 @@ func test(solver func(jobs base.Jobs) state.State, tests ...testCase) Results {
 
 	return results
 }
+
