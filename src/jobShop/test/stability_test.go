@@ -66,4 +66,4 @@ func testStability(t *testing.T, tests []testCase, solver func(jobs base.Jobs) s
 	}
 }
 
-func someRandomTests() []testCase { return []testCase{randomTest(), randomTest(), randomTest()} }
+func someRandomTests() []testCase { return []testCase{RandomTest(), RandomTest(), RandomTest()} }

@@ -3,6 +3,7 @@ package graph_state
 import (
 	"jobShop/state"
 	"jobShop/base"
+	"fmt"
 )
 
 type job int
@@ -82,4 +83,14 @@ func (s *State) To(jobState *state.State) (success bool) {
 	}
 
 	return true
+}
+
+func (g DisjunctiveGraph) String() string {
+	var res string
+
+	for i, js := range g {
+		res += fmt.Sprintf("Machine %v: %v\n", i, js)
+	}
+
+	return res
 }
