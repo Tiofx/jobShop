@@ -1,8 +1,7 @@
-package main
+package test
 
 import (
 	_ "net/http/pprof"
-	"jobShop/test"
 	"flag"
 	"os"
 	"log"
@@ -10,7 +9,7 @@ import (
 	"runtime"
 )
 
-func main() {
+func Profile(it func()) {
 	flag.Parse()
 
 	var cpuprofile = flag.String("cpuprofile", "build/cpu2.prof", "write cpu profile to `file`")
@@ -27,11 +26,7 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	//test.SimpleTest()
-	//return
-	//test.ExampleResolver_FindSolution()
-	//test.ExampleResolver_FindSolution2()
-	test.ExampleTabuSearch()
+	it()
 
 	if *memprofile != "" {
 		f, err := os.Create(*memprofile)
