@@ -43,6 +43,17 @@ func (s *Solver) BestMakespan() int {
 	return s.bestSolution.Makespan()
 }
 
+func Solve(jobs base.Jobs, maxIterationNumber, maxWithoutImprovement, memoryCapacity int) state.State {
+	initState := taskWaveByMachineGreed.Resolver{
+		MaxTasksOnWave: taskWaveByMachineGreed.OptimalPermutationLimit,
+		State:          state.New(jobs),
+	}
+	solution := initState.FindSolution()
+	solver := NewSolver(solution, memoryCapacity, maxIterationNumber, maxWithoutImprovement)
+
+	return solver.FindSolution()
+}
+
 func NewSolver(state state.State, memoryCapacity, maxIteration, maxWithoutImprovement int) Solver {
 	initialSolution := graph_state.From(state)
 	best := Neighbour{
