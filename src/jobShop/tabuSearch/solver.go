@@ -6,7 +6,6 @@ import (
 	"math"
 	. "jobShop/tabuSearch/neighborhood"
 	"jobShop/tabuSearch/graph_state"
-	"fmt"
 	"jobShop/initSolution/taskWaveByMachineGreed"
 )
 
@@ -165,7 +164,7 @@ func (s *Solver) FindSolution() state.State {
 
 		if s.BestMakespan() < min {
 			min = s.BestMakespan()
-			fmt.Println(i, " : ", min)
+			//fmt.Println(i, " : ", min)
 		}
 	}
 	return s.GetBest().JobState

@@ -24,7 +24,7 @@ func fullPathTo(filename string) string   { return testDir + "/" + filename }
 func testCaseOf(filename string) testCase { return newTestCase(filename) }
 func testsNumber() int                    { return len(getAllFiles()) }
 
-func testCaseNumber(index int) testCase {
+func TestCaseNumber(index int) testCase {
 	files := getAllFiles()
 	lastIndex := len(files) - 1
 	if index < 0 || index > lastIndex {
@@ -34,7 +34,18 @@ func testCaseNumber(index int) testCase {
 	return testCaseOf(files[index].Name())
 }
 
-func simpleTestCase() testCase {
+func From(jobs base.Jobs, optimum int) testCase {
+	return testCase{
+		Filename:    "no file",
+		JobsNumber:  len(jobs),
+		TasksNumber: -1,
+		Optimum:     optimum,
+		Jobs:        jobs,
+	}
+
+}
+
+func SimpleTestCase() testCase {
 	jobs := base.Jobs{
 		{
 			{0, 3},
@@ -54,20 +65,14 @@ func simpleTestCase() testCase {
 		},
 	}
 
-	return testCase{
-		Filename:    "no file",
-		JobsNumber:  3,
-		TasksNumber: 3,
-		Optimum:     11,
-		Jobs:        jobs,
-	}
+	return From(jobs, 11)
 }
 
-func generalTestCase() testCase { return testCaseNumber(0) }
-func complexTestCase() testCase { return testCaseNumber(2) }
-func randomTest() testCase      { return testCaseNumber(rand.Intn(testsNumber())) }
+func GeneralTestCase() testCase { return TestCaseNumber(0) }
+func ComplexTestCase() testCase { return TestCaseNumber(2) }
+func RandomTest() testCase      { return TestCaseNumber(rand.Intn(testsNumber())) }
 
-func allTestsCases() []testCase {
+func AllTestsCases() []testCase {
 	var res []testCase
 	for _, fileInfo := range getAllFiles() {
 		res = append(res, testCaseOf(fileInfo.Name()))
