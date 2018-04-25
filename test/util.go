@@ -7,12 +7,18 @@ import (
 	"fmt"
 	"github.com/Tiofx/jobShop/base"
 	"math/rand"
+	"path"
+	"runtime"
 )
 
-const testDir = "testinstances"
+func testDir() string {
+	_, filename, _, _ := runtime.Caller(0)
+	pathToLibRoot := path.Join(filename, "../../")
+	return path.Join(pathToLibRoot, "testinstances")
+}
 
 func getAllFiles() []os.FileInfo {
-	infos, err := ioutil.ReadDir(testDir)
+	infos, err := ioutil.ReadDir(testDir())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -20,7 +26,7 @@ func getAllFiles() []os.FileInfo {
 	return infos
 }
 
-func fullPathTo(filename string) string   { return testDir + "/" + filename }
+func fullPathTo(filename string) string   { return path.Join(testDir(), filename) }
 func testCaseOf(filename string) testCase { return newTestCase(filename) }
 func testsNumber() int                    { return len(getAllFiles()) }
 
