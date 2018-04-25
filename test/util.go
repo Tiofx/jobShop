@@ -9,7 +9,7 @@ import (
 	"math/rand"
 )
 
-const testDir = "./testinstances"
+const testDir = "testinstances"
 
 func getAllFiles() []os.FileInfo {
 	infos, err := ioutil.ReadDir(testDir)
