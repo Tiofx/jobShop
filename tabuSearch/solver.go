@@ -157,15 +157,12 @@ func (s *Solver) Next() {
 }
 
 func (s *Solver) FindSolution() state.State {
-	min := s.BestMakespan()
-
-	for i := 0; i < s.maxIteration && s.iterationWithoutChanges < s.maxWithoutImprovement; i++ {
+	for i := 0; s.IsNeedOneMoreIteration(i); i++ {
 		s.Next()
-
-		if s.BestMakespan() < min {
-			min = s.BestMakespan()
-			//fmt.Println(i, " : ", min)
-		}
 	}
+
 	return s.GetBest().JobState
+}
+func (s *Solver) IsNeedOneMoreIteration(i int) bool {
+	return i < s.maxIteration && s.iterationWithoutChanges < s.maxWithoutImprovement
 }
