@@ -201,9 +201,13 @@ func (el edgeList) toposort(jobs base.Jobs, jobsOrderOnMachine graph_state.Disju
 	return
 }
 
+func (g edgeList) getIndexes(jobs base.Jobs, jobFrom, taskFrom, jobTo, taskTo int) (nodeFrom, nodeTo int) {
+	nodeFrom, nodeTo = indexOf(jobs, jobFrom, taskFrom), indexOf(jobs, jobTo, taskTo)
+	return
+}
+
 func (g edgeList) addEdge(jobs base.Jobs, jobFrom, taskFrom, jobTo, taskTo int) {
-	nodeFrom := indexOf(jobs, jobFrom, taskFrom)
-	nodeTo := indexOf(jobs, jobTo, taskTo)
+	nodeFrom, nodeTo := g.getIndexes(jobs, jobFrom, taskFrom, jobTo, taskTo)
 	g[nodeFrom] = append(g[nodeFrom], nodeTo)
 }
 
@@ -217,7 +221,6 @@ func (g *edgeList) setUp(jobs base.Jobs) {
 
 func (g *edgeList) setUpMore(graph graph_state.DisjunctiveGraph, jobs base.Jobs) {
 	indexOfNextTask := make([]int, len(jobs))
-
 	for machine, jobSequence := range graph {
 		util.FillIntsWith(indexOfNextTask, -1)
 		job := jobSequence[0]
@@ -235,6 +238,10 @@ func (g *edgeList) setUpMore(graph graph_state.DisjunctiveGraph, jobs base.Jobs)
 			}
 
 			indexOfNextTask[nextJob] = nodeTo
+			if nodeFrom, nodeTo := g.getIndexes(jobs, int(job), indexOfNextTask[job], int(nextJob), indexOfNextTask[nextJob]);
+				nodeFrom == nodeTo {
+				continue
+			}
 			g.addEdge(jobs, int(job), indexOfNextTask[job], int(nextJob), indexOfNextTask[nextJob])
 		}
 		for _, job := range jobSequence {
