@@ -7,6 +7,8 @@ import (
 	. "github.com/Tiofx/jobShop/tabuSearch/neighborhood"
 	"github.com/Tiofx/jobShop/tabuSearch/graph_state"
 	"github.com/Tiofx/jobShop/initSolution/taskWaveByMachineGreed"
+	"fmt"
+	"github.com/davecgh/go-spew/spew"
 )
 
 type Solver struct {
@@ -165,4 +167,14 @@ func (s *Solver) FindSolution() state.State {
 }
 func (s *Solver) IsNeedOneMoreIteration(i int) bool {
 	return i < s.maxIteration && s.iterationWithoutChanges < s.maxWithoutImprovement
+}
+
+func (s *Solver) Log() {
+	fmt.Println(s.jobs)
+	fmt.Println("Current solution:\n", s.CurrentSolution.Graph)
+	fmt.Println("-----")
+	fmt.Printf("jobs: %#v\n", s.jobs)
+	fmt.Printf("current solution: %#v\n", s.CurrentSolution.Graph)
+	fmt.Println("\n\n-- Full dump --\n\n")
+	spew.Dump(s)
 }

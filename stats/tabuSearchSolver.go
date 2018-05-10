@@ -7,6 +7,7 @@ import (
 	"github.com/Tiofx/jobShop/base"
 	"github.com/Tiofx/jobShop/initSolution/taskWaveByMachineGreed"
 	"github.com/Tiofx/jobShop/tabuSearch"
+	"fmt"
 )
 
 type SolverWithStatistic struct {
@@ -54,6 +55,13 @@ func (s *SolverWithStatistic) Next() {
 
 func (s *SolverWithStatistic) FindSolution() state.State {
 	defer close(s.improvementChan)
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("recovered from ", r)
+			s.Solver.Log()
+			time.Sleep(100 * time.Millisecond)
+		}
+	}()
 	s.startTime = time.Now()
 
 	s.setUpSolver()
