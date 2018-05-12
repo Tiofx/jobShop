@@ -1,6 +1,6 @@
 package base
 
-type JobsTotalTime []int
+type JobsTotalTime []uint64
 
 func NewJobsTotalTime(jobs Jobs) JobsTotalTime {
 	res := make(JobsTotalTime, len(jobs))

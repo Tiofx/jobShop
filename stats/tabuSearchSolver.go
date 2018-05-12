@@ -21,7 +21,7 @@ type SolverWithStatistic struct {
 	*tabuSearch.Solver
 }
 
-func NewSolverWithStatistic(jobs base.Jobs, memoryCapacity, maxIteration, maxWithoutImprovement int) SolverWithStatistic {
+func NewSolverWithStatistic(jobs base.Jobs, memoryCapacity, maxIteration, maxWithoutImprovement uint64) SolverWithStatistic {
 	initSolver :=
 		taskWaveByMachineGreed.Resolver{
 			MaxTasksOnWave: taskWaveByMachineGreed.OptimalPermutationLimit,
@@ -65,7 +65,7 @@ func (s *SolverWithStatistic) FindSolution() state.State {
 	s.startTime = time.Now()
 
 	s.setUpSolver()
-	for i := 0; s.IsNeedOneMoreIteration(i); i++ {
+	for i := uint64(0); s.IsNeedOneMoreIteration(i); i++ {
 		s.Next()
 	}
 

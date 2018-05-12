@@ -18,7 +18,7 @@ func (s *State) CopyIn(res *State) {
 	//copy(res.LeftTotalTime, s.LeftTotalTime)
 	//
 	//res.redoData = s.redoData
-	//res.JobOrder = make([]int, len(s.JobOrder))
+	//res.JobOrder = make([]uint64, len(s.JobOrder))
 	//copy(res.JobOrder, s.JobOrder)
 
 	deepcopy.Copy(res, s)

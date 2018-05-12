@@ -18,13 +18,13 @@ func NewByLongestJob(jobState *state.State, graph *graph_state.DisjunctiveGraph)
 
 func (r ByLongestJob) criticalJob() job {
 	var (
-		criticalJob       int
-		timeOfCriticalJob int
+		criticalJob       uint64
+		timeOfCriticalJob uint64
 	)
 
 	for job, time := range r.JobState.JobTimeWave {
 		if time > timeOfCriticalJob {
-			criticalJob = job
+			criticalJob = uint64(job)
 			timeOfCriticalJob = time
 		}
 	}

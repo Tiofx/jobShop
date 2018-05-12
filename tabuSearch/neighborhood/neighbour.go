@@ -10,7 +10,7 @@ import (
 type Neighbour struct {
 	JobState state.State
 	Graph    DisjunctiveGraph
-	cycle    int
+	cycle    uint64
 
 	graphState *State
 }
@@ -24,7 +24,7 @@ func (n *Neighbour) UpdateByGraph() (success bool) {
 	} else {
 		n.graphState.DisjunctiveGraph = n.Graph
 		n.graphState.Jobs = n.JobState.Jobs
-		util.FillIntsWith(n.graphState.Executed, 0)
+		util.FillUintsWith(n.graphState.Executed, 0)
 	}
 
 	success = n.graphState.To(&n.JobState)
@@ -32,9 +32,9 @@ func (n *Neighbour) UpdateByGraph() (success bool) {
 	return
 }
 
-type Move struct{ Machine, I, J int }
+type Move struct{ Machine, I, J uint64 }
 
-func (m *Move) Deconstruct() (machine, i, j int) {
+func (m *Move) Deconstruct() (machine, i, j uint64) {
 	return m.Machine, m.I, m.J
 }
 
@@ -57,6 +57,6 @@ func (n *Neighbour) Redo(move Move) {
 	n.Apply(move)
 }
 
-func (n *Neighbour) Makespan() int {
+func (n *Neighbour) Makespan() uint64 {
 	return n.JobState.Makespan()
 }

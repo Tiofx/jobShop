@@ -12,9 +12,9 @@ type byJob struct {
 	Graph    *graph_state.DisjunctiveGraph
 }
 
-type taskPosition int
+type taskPosition uint64
 
-type job int
+type job uint64
 type criticalTasks map[base.Machine][]taskPosition
 
 func (r byJob) taskPositionFor(critical job) criticalTasks {
@@ -22,7 +22,7 @@ func (r byJob) taskPositionFor(critical job) criticalTasks {
 
 	for machine, jobOrder := range *r.Graph {
 		for index, job := range jobOrder {
-			if int(job) == int(critical) {
+			if uint64(job) == uint64(critical) {
 				machine := base.Machine(machine)
 				tasks[machine] = append(tasks[machine], taskPosition(index))
 			}
@@ -35,14 +35,14 @@ func (r byJob) taskPositionFor(critical job) criticalTasks {
 func (r byJob) generateFor(tasks criticalTasks) []Move {
 	var res []Move
 
-	for machine := 0; machine < r.JobState.Jobs.MachineNumber(); machine++ {
+	for machine := uint64(0); machine < r.JobState.Jobs.MachineNumber(); machine++ {
 		machine := base.Machine(machine)
 		tasksOfMachine := tasks[machine]
 
 		for _, task := range tasksOfMachine {
 			for taskIndex := range (*r.Graph)[machine] {
-				if r.canMove(taskIndex, int(task), machine) {
-					res = append(res, Move{Machine: int(machine), I: taskIndex, J: int(task)})
+				if r.canMove(uint64(taskIndex), uint64(task), machine) {
+					res = append(res, Move{Machine: uint64(machine), I: uint64(taskIndex), J: uint64(task)})
 				}
 			}
 		}
@@ -50,13 +50,13 @@ func (r byJob) generateFor(tasks criticalTasks) []Move {
 
 	return res
 }
-func (r byJob) canMove(taskIndex int, task int, machine base.Machine) bool {
+func (r byJob) canMove(taskIndex uint64, task uint64, machine base.Machine) bool {
 	return taskIndex != task && !r.theSameJob(machine, taskIndex, task) && !r.willLeadToImpossibleTaskOrder(machine, taskIndex, task)
 }
-func (r byJob) theSameJob(machine base.Machine, taskIndex int, task int) bool {
+func (r byJob) theSameJob(machine base.Machine, taskIndex uint64, task uint64) bool {
 	return (*r.Graph)[machine][taskIndex] == (*r.Graph)[machine][task]
 }
-func (r byJob) willLeadToImpossibleTaskOrder(machine base.Machine, i int, j int) bool {
+func (r byJob) willLeadToImpossibleTaskOrder(machine base.Machine, i uint64, j uint64) bool {
 	jobI, jobJ := (*r.Graph)[machine][i], (*r.Graph)[machine][j]
 	i1, i2 := util.Min(i, j), util.Max(i, j)
 	for _, job := range (*r.Graph)[machine][i1+1:i2] {

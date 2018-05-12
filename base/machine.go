@@ -1,3 +1,3 @@
 package base
 
-type Machine int
+type Machine uint64

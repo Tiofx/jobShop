@@ -22,7 +22,7 @@ func (r ByAll) Generate() []Move {
 	for machine, jobList := range *r.Graph {
 		for i, jobI := range jobList {
 			for _, jobJ := range jobList[i+1:] {
-				res = append(res, Move{Machine: int(machine), I: int(jobI), J: int(jobJ)})
+				res = append(res, Move{Machine: uint64(machine), I: uint64(jobI), J: uint64(jobJ)})
 			}
 		}
 	}

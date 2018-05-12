@@ -20,14 +20,15 @@ func (tp *testParser) next() string {
 	return tp.Text()
 }
 
-func (tp *testParser) nextInt() (int, error) {
+func (tp *testParser) nextInt() (uint64, error) {
 	if len(tp.words) == 0 {
 		tp.next()
 	}
 	word := tp.words[0]
 	tp.words = tp.words[1:]
 
-	return strconv.Atoi(word)
+	i, e := strconv.Atoi(word)
+	return uint64(i), e
 }
 
 func newTestParser(filename string) *testParser {
@@ -47,16 +48,16 @@ func skipLine(scanner *bufio.Scanner) {
 	scanner.Scan()
 }
 
-func (scanner *testParser) parseAllData() (jobsNumber, taskNumbers, optimum int, jobs base.Jobs) {
+func (scanner *testParser) parseAllData() (jobsNumber, taskNumbers, optimum uint64, jobs base.Jobs) {
 	jobsNumber, taskNumbers, optimum = scanner.parseMainData()
 	jobs = scanner.parseJobs(jobsNumber, taskNumbers)
 
 	return
 }
-func (scanner *testParser) parseMainData() (jobsNumber, tasksNumber, optimum int) {
-	var mainValues []int
+func (scanner *testParser) parseMainData() (jobsNumber, tasksNumber, optimum uint64) {
+	var mainValues []uint64
 
-	for i := 0; i < 3; i++ {
+	for i := uint64(0); i < 3; i++ {
 		if value, err := scanner.nextInt(); err == nil {
 			mainValues = append(mainValues, value)
 		} else {
@@ -67,20 +68,20 @@ func (scanner *testParser) parseMainData() (jobsNumber, tasksNumber, optimum int
 	return mainValues[0], mainValues[1], mainValues[2]
 }
 
-func (scanner *testParser) parseJobs(jobNumber, taskNumber int) base.Jobs {
+func (scanner *testParser) parseJobs(jobNumber, taskNumber uint64) base.Jobs {
 	jobs := make([]base.Job, jobNumber)
 
-	for i := 0; i < jobNumber; i++ {
+	for i := uint64(0); i < jobNumber; i++ {
 		jobs[i] = scanner.parseJob(taskNumber)
 	}
 
 	return jobs
 }
 
-func (scanner *testParser) parseJob(taskNumber int) base.Job {
+func (scanner *testParser) parseJob(taskNumber uint64) base.Job {
 	job := make([]base.Task, taskNumber)
 
-	for i := 0; i < taskNumber; i++ {
+	for i := uint64(0); i < taskNumber; i++ {
 		job[i] = scanner.parseTask()
 	}
 

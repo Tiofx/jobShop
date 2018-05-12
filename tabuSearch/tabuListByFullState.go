@@ -3,6 +3,7 @@ package tabuSearch
 import (
 	. "github.com/Tiofx/jobShop/tabuSearch/neighborhood"
 	"reflect"
+	"math"
 )
 
 type TabuListByState interface {
@@ -13,7 +14,7 @@ type TabuListByState interface {
 }
 
 type moveWithMakespan struct {
-	makespan int
+	makespan uint64
 	Move
 }
 
@@ -22,14 +23,14 @@ type tabuListByState struct {
 	list       []moveWithMakespan
 }
 
-func (tabu *tabuListByState) IndexOf(move moveWithMakespan) (index int, exist bool) {
+func (tabu *tabuListByState) IndexOf(move moveWithMakespan) (index uint64, exist bool) {
 	for i, tabuMove := range tabu.list {
 		if move == tabuMove {
-			return i, true
+			return uint64(i), true
 		}
 	}
 
-	return -1, false
+	return math.MaxUint64, false
 }
 
 func (tabu *tabuListByState) Contain(state *Neighbour) bool {

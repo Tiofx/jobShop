@@ -19,16 +19,16 @@ type Solver struct {
 	bestLocal    *Neighbour
 	bestSolution *Neighbour
 
-	maxIteration            int
-	iterationWithoutChanges int
-	maxWithoutImprovement   int
+	maxIteration            uint64
+	iterationWithoutChanges uint64
+	maxWithoutImprovement   uint64
 }
 
 func (s *Solver) GetBest() *Neighbour {
 	return s.bestSolution
 }
 
-func (s *Solver) BestLocalMakespan() int {
+func (s *Solver) BestLocalMakespan() uint64 {
 	if s.bestLocal == nil {
 		return math.MaxInt64
 	}
@@ -36,7 +36,7 @@ func (s *Solver) BestLocalMakespan() int {
 	return s.bestLocal.Makespan()
 }
 
-func (s *Solver) BestMakespan() int {
+func (s *Solver) BestMakespan() uint64 {
 	if s.bestSolution == nil {
 		return math.MaxInt64
 	}
@@ -44,7 +44,7 @@ func (s *Solver) BestMakespan() int {
 	return s.bestSolution.Makespan()
 }
 
-func Solve(jobs base.Jobs, maxIterationNumber, maxWithoutImprovement, memoryCapacity int) state.State {
+func Solve(jobs base.Jobs, maxIterationNumber, maxWithoutImprovement, memoryCapacity uint64) state.State {
 	initState := taskWaveByMachineGreed.Resolver{
 		MaxTasksOnWave: taskWaveByMachineGreed.OptimalPermutationLimit,
 		State:          state.New(jobs),
@@ -55,7 +55,7 @@ func Solve(jobs base.Jobs, maxIterationNumber, maxWithoutImprovement, memoryCapa
 	return solver.FindSolution()
 }
 
-func NewSolver(state state.State, memoryCapacity, maxIteration, maxWithoutImprovement int) Solver {
+func NewSolver(state state.State, memoryCapacity, maxIteration, maxWithoutImprovement uint64) Solver {
 	initialSolution := graph_state.From(state)
 	best := Neighbour{
 		JobState: state,
@@ -79,7 +79,7 @@ func (s *Solver) setUpBestNeighbour() (bestMove Move) {
 	s.bestLocal = nil
 	iterator := NewByCriticalPath(&s.CurrentSolution.JobState, &s.CurrentSolution.Graph)
 
-	bestLocalMakespan := math.MaxInt64
+	bestLocalMakespan := uint64(math.MaxInt64)
 
 	for _, move := range iterator.Generate() {
 		s.CurrentSolution.Apply(move)
@@ -159,13 +159,13 @@ func (s *Solver) Next() {
 }
 
 func (s *Solver) FindSolution() state.State {
-	for i := 0; s.IsNeedOneMoreIteration(i); i++ {
+	for i := uint64(0); s.IsNeedOneMoreIteration(i); i++ {
 		s.Next()
 	}
 
 	return s.GetBest().JobState
 }
-func (s *Solver) IsNeedOneMoreIteration(i int) bool {
+func (s *Solver) IsNeedOneMoreIteration(i uint64) bool {
 	return i < s.maxIteration && s.iterationWithoutChanges < s.maxWithoutImprovement
 }
 

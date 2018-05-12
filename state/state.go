@@ -16,20 +16,20 @@ type State struct {
 
 	Parent   *State
 	redoData redoData
-	JobOrder []int
-	makespan int
+	JobOrder []uint64
+	makespan uint64
 }
 
 type redoData struct {
 	machine                                                          Machine
-	job, task, jobTimeWave, machineTimeWave, leftTotalTime, executed int
+	job, task, jobTimeWave, machineTimeWave, leftTotalTime, executed uint64
 }
 
-func (rd *redoData) deconstruct() (job, task int, machine Machine, jobTimeWave, machineTimeWave, leftTotalTime, executed int) {
+func (rd *redoData) deconstruct() (job, task uint64, machine Machine, jobTimeWave, machineTimeWave, leftTotalTime, executed uint64) {
 	return rd.job, rd.task, rd.machine, rd.jobTimeWave, rd.machineTimeWave, rd.leftTotalTime, rd.executed
 }
 
-func (s *State) saveForRedo(job int, task int) {
+func (s *State) saveForRedo(job uint64, task uint64) {
 	machine := s.Jobs[job][task].Machine
 
 	s.redoData.job = job
@@ -64,34 +64,34 @@ func New(jobs Jobs) State {
 		MachineTimeWave: make(MachineTimeWave, jobs.MachineNumber()),
 		LeftTotalTime:   NewJobsTotalTime(jobs),
 		Parent:          nil,
-		JobOrder:        make([]int, 0, jobs.TotalTaskNumber()),
+		JobOrder:        make([]uint64, 0, jobs.TotalTaskNumber()),
 	}
 }
 
 func (s *State) Reset() {
-	util.FillIntsWith(s.Executed, 0)
-	util.FillIntsWith(s.JobTimeWave, 0)
-	util.FillIntsWith(s.MachineTimeWave, 0)
+	util.FillUintsWith(s.Executed, 0)
+	util.FillUintsWith(s.JobTimeWave, 0)
+	util.FillUintsWith(s.MachineTimeWave, 0)
 	s.LeftTotalTime.SetUpBy(s.Jobs)
 
-	util.FillIntsWith(s.JobOrder, 0)
+	util.FillUintsWith(s.JobOrder, 0)
 	s.JobOrder = s.JobOrder[0:0]
 	s.redoData = redoData{}
 	s.makespan = 0
 	s.Parent = nil
 }
 
-func (s *State) startTimeFor(job, task int) (startTime int) {
+func (s *State) startTimeFor(job, task uint64) (startTime uint64) {
 	machine := s.Jobs[job][task].Machine
 	startTime = util.Max(s.JobTimeWave[job], s.MachineTimeWave[machine])
 	return
 }
 
-func (s *State) endOf(job, task int) int {
+func (s *State) endOf(job, task uint64) uint64 {
 	return s.startTimeFor(job, task) + s.Jobs[job][task].Time
 }
 
-func (s *State) updateTimeWave(job, task int) {
+func (s *State) updateTimeWave(job, task uint64) {
 	machine, time := s.Jobs[job][task].Deconstruct()
 	endOfCurrentTask := s.endOf(job, task)
 
@@ -100,7 +100,7 @@ func (s *State) updateTimeWave(job, task int) {
 	s.LeftTotalTime[job] -= time
 }
 
-func (s *State) Execute(job, task int) {
+func (s *State) Execute(job, task uint64) {
 	s.saveForRedo(job, task)
 
 	s.updateTimeWave(job, task)
@@ -121,16 +121,16 @@ func (s *State) Undo() {
 	s.JobOrder = s.JobOrder[:len(s.JobOrder)-1]
 }
 
-func (s *State) NextTaskIndexOf(job int) (int, bool) {
+func (s *State) NextTaskIndexOf(job uint64) (uint64, bool) {
 	nextTaskIndex := s.Executed[job]
-	if nextTaskIndex >= len(s.Jobs[job]) {
+	if nextTaskIndex >= uint64(len(s.Jobs[job])) {
 		return 0, false
 	}
 
 	return nextTaskIndex, true
 }
 
-func (s *State) NextTaskOf(job int) (*Task, bool) {
+func (s *State) NextTaskOf(job uint64) (*Task, bool) {
 	if nextTaskIndex, ok := s.NextTaskIndexOf(job); ok {
 		return &s.Jobs[job][nextTaskIndex], true
 
@@ -139,8 +139,8 @@ func (s *State) NextTaskOf(job int) (*Task, bool) {
 	}
 }
 
-func (s *State) EstimateTime() (min, max int) {
-	var maxEstimateOfJobEnd, totalLeftTime, maxTimeWave int
+func (s *State) EstimateTime() (min, max uint64) {
+	var maxEstimateOfJobEnd, totalLeftTime, maxTimeWave uint64
 
 	for job, currentTime := range s.JobTimeWave {
 		leftTime := s.LeftTotalTime[job]
@@ -162,7 +162,7 @@ func (s *State) EstimateTime() (min, max int) {
 func (s *State) IsFinish() bool {
 	return s.Executed.IsExecutedAll(s.Jobs)
 }
-func (s *State) Makespan() int {
+func (s *State) Makespan() uint64 {
 	return util.MaxOf(s.JobTimeWave)
 	//if s.makespan == 0 {
 	//	max := util.MaxOf(s.JobTimeWave)

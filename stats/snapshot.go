@@ -6,8 +6,8 @@ import (
 )
 
 type Snapshot struct {
-	IterationNumber int
-	Makespan        int
+	IterationNumber uint64
+	Makespan        uint64
 	TimeFromStart   time.Duration
 }
 

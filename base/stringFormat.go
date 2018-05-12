@@ -11,7 +11,7 @@ func (jobs Jobs) String() (res string) {
 }
 
 func (executed NumberOfExecutedTasks) String() (res string) {
-	//jobsToString([]int(executed), res)
+	//jobsToString([]uint64(executed), res)
 	for job, number := range executed {
 		res += fmt.Sprintf("job %v: %v\n", job, number)
 	}

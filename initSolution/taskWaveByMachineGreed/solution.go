@@ -8,7 +8,7 @@ import (
 const OptimalPermutationLimit = 3
 
 type Resolver struct {
-	MaxTasksOnWave int
+	MaxTasksOnWave uint64
 	State
 }
 
@@ -29,8 +29,8 @@ func (r Resolver) NextTaskWave() TaskWave {
 	tw := make(TaskWave, r.Jobs.MachineNumber())
 
 	for i := range r.Jobs {
-		if task, ok := r.NextTaskOf(i); ok {
-			tw.Add(i, task)
+		if task, ok := r.NextTaskOf(uint64(i)); ok {
+			tw.Add(uint64(i), task)
 		}
 	}
 
@@ -39,7 +39,7 @@ func (r Resolver) NextTaskWave() TaskWave {
 
 func (r *Resolver) Next() Resolver {
 	tasks := r.NextTaskWave().GetBiggest()
-	if len(tasks) > r.MaxTasksOnWave {
+	if uint64(len(tasks)) > r.MaxTasksOnWave {
 		tasks = tasks[:r.MaxTasksOnWave-1]
 	}
 	nextSolution := r.GreedChoice(tasks)
@@ -51,7 +51,7 @@ func (r *Resolver) Next() Resolver {
 func (r Resolver) GreedChoice(tasks TaskInfoSet) Resolver {
 	var best *Resolver
 
-	c := util.Combination(len(tasks))
+	c := util.Combination(uint64(len(tasks)))
 	for tasksOrder, isChanOpen := <-c; isChanOpen; tasksOrder, isChanOpen = <-c {
 		newState := r.Copy()
 

@@ -22,9 +22,9 @@ func NewByCriticalPath(jobState *state.State, graph *graph_state.DisjunctiveGrap
 	}
 }
 
-type pathNode struct{ time, maximumEarliestTime, minimumLatestTime int }
+type pathNode struct{ time, maximumEarliestTime, minimumLatestTime int64 }
 
-func (pn *pathNode) slack() int       { return pn.minimumLatestTime - pn.maximumEarliestTime }
+func (pn *pathNode) slack() int64       { return pn.minimumLatestTime - pn.maximumEarliestTime }
 func (pn *pathNode) isCritical() bool { return pn.slack() == 0 }
 
 func (pn *pathNode) reset() {
@@ -34,10 +34,10 @@ func (pn *pathNode) reset() {
 
 type path []pathNode
 
-func (p path) critical() (criticalNodeIndexes []int) {
+func (p path) critical() (criticalNodeIndexes []int64) {
 	for i, pathNode := range p {
 		if pathNode.isCritical() {
-			criticalNodeIndexes = append(criticalNodeIndexes, i)
+			criticalNodeIndexes = append(criticalNodeIndexes, int64(i))
 		}
 	}
 	return
@@ -49,19 +49,19 @@ func newPath(jobs base.Jobs) path {
 	for index := range path {
 		node := &path[index]
 		node.reset()
-		job, task := toJobAndTask(jobs, index)
-		node.time = jobs[job][task].Time
+		job, task := toJobAndTask(jobs, int64(index))
+		node.time = int64(jobs[job][task].Time)
 	}
 
 	return path
 }
 
-func (p path) updateMET(from, to int) {
-	p[to].maximumEarliestTime = util.Max(p[to].maximumEarliestTime, p[from].maximumEarliestTime+p[from].time)
+func (p path) updateMET(from, to int64) {
+	p[to].maximumEarliestTime = int64(util.MaxInt64(p[to].maximumEarliestTime, p[from].maximumEarliestTime+p[from].time))
 }
 
-func (p path) updateMLT(from, to int) {
-	p[from].minimumLatestTime = util.Min(p[from].minimumLatestTime, p[to].minimumLatestTime-p[from].time)
+func (p path) updateMLT(from, to int64) {
+	p[from].minimumLatestTime = int64(util.MinInt64(p[from].minimumLatestTime, p[to].minimumLatestTime-p[from].time))
 }
 
 func (p path) formTasks(jobs base.Jobs, graph graph_state.DisjunctiveGraph) criticalTasks {
@@ -77,7 +77,7 @@ func (p path) formTasks(jobs base.Jobs, graph graph_state.DisjunctiveGraph) crit
 	return res
 }
 
-type edge struct{ from, to int }
+type edge struct{ from, to int64 }
 
 func (r ByCriticalPath) taskPosition() criticalTasks {
 	edgeList := newEdgeList(r.JobState.Jobs, *r.Graph)
@@ -110,18 +110,18 @@ func (r ByCriticalPath) Generate() []Move {
 
 // ==================================================================
 
-func determinatePosition(jobs base.Jobs, graph graph_state.DisjunctiveGraph, job, task int) int {
+func determinatePosition(jobs base.Jobs, graph graph_state.DisjunctiveGraph, job, task int64) int64 {
 	position := onTheSameMachine(jobs, job, task)
 	machine := jobs[job][task].Machine
-	indexOnMachine := positionInMachine(graph, int(machine), job, position)
+	indexOnMachine := positionInMachine(graph, int64(machine), job, position)
 	return indexOnMachine
 }
 
-func onTheSameMachine(jobs base.Jobs, job, taskIndex int) int {
+func onTheSameMachine(jobs base.Jobs, job, taskIndex int64) int64 {
 	machine := jobs[job][taskIndex].Machine
-	numberTaskOnMachine := 0
+	numberTaskOnMachine := int64(0)
 	for i, task := range jobs[job] {
-		if taskIndex == i {
+		if taskIndex == int64(i) {
 			return numberTaskOnMachine
 		}
 		if machine == task.Machine {
@@ -132,14 +132,14 @@ func onTheSameMachine(jobs base.Jobs, job, taskIndex int) int {
 	panic("problem with onTheSameMachine, not found task")
 }
 
-func positionInMachine(graph graph_state.DisjunctiveGraph, machine, job, position int) int {
+func positionInMachine(graph graph_state.DisjunctiveGraph, machine, job, position int64) int64 {
 	repeating := -1
 	for i, currentJob := range graph[machine] {
-		if job == int(currentJob) {
+		if job == int64(currentJob) {
 			repeating++
 		}
-		if repeating == position {
-			return i
+		if int64(repeating) == position {
+			return int64(i)
 		}
 	}
 
@@ -148,7 +148,7 @@ func positionInMachine(graph graph_state.DisjunctiveGraph, machine, job, positio
 
 // ==================================================================
 
-type edgeList [][]int
+type edgeList [][]int64
 
 func (el edgeList) String() string {
 	var res string
@@ -167,18 +167,18 @@ func newEdgeList(jobs base.Jobs, jobsOrderOnMachine graph_state.DisjunctiveGraph
 	return graph
 }
 
-func (el edgeList) toposort(jobs base.Jobs, jobsOrderOnMachine graph_state.DisjunctiveGraph) (edgeOrder []int) {
-	graph := toposort.NewGraph(jobs.TotalTaskNumber())
+func (el edgeList) toposort(jobs base.Jobs, jobsOrderOnMachine graph_state.DisjunctiveGraph) (edgeOrder []int64) {
+	graph := toposort.NewGraph(int(jobs.TotalTaskNumber()))
 
 	for i, job := range jobs {
 		for j := range job {
-			graph.AddNode(node(jobs, i, j))
+			graph.AddNode(node(jobs, int64(i), int64(j)))
 		}
 	}
 
 	for from, toList := range el {
 		for _, to := range toList {
-			graph.AddEdge(strconv.Itoa(from), strconv.Itoa(to))
+			graph.AddEdge(strconv.Itoa(from), strconv.Itoa(int(to)))
 		}
 	}
 
@@ -188,25 +188,25 @@ func (el edgeList) toposort(jobs base.Jobs, jobsOrderOnMachine graph_state.Disju
 		panic("problem with toposort")
 	}
 
-	edgeOrder = make([]int, len(strings))
+	edgeOrder = make([]int64, len(strings))
 	for i, str := range strings {
 		num, err := strconv.Atoi(str)
 		if err != nil {
 			panic("in graph non integer node")
 		}
 
-		edgeOrder[i] = num
+		edgeOrder[i] = int64(num)
 	}
 
 	return
 }
 
-func (g edgeList) getIndexes(jobs base.Jobs, jobFrom, taskFrom, jobTo, taskTo int) (nodeFrom, nodeTo int) {
+func (g edgeList) getIndexes(jobs base.Jobs, jobFrom, taskFrom, jobTo, taskTo int64) (nodeFrom, nodeTo int64) {
 	nodeFrom, nodeTo = indexOf(jobs, jobFrom, taskFrom), indexOf(jobs, jobTo, taskTo)
 	return
 }
 
-func (g edgeList) addEdge(jobs base.Jobs, jobFrom, taskFrom, jobTo, taskTo int) {
+func (g edgeList) addEdge(jobs base.Jobs, jobFrom, taskFrom, jobTo, taskTo int64) {
 	nodeFrom, nodeTo := g.getIndexes(jobs, jobFrom, taskFrom, jobTo, taskTo)
 	g[nodeFrom] = append(g[nodeFrom], nodeTo)
 }
@@ -214,35 +214,35 @@ func (g edgeList) addEdge(jobs base.Jobs, jobFrom, taskFrom, jobTo, taskTo int) 
 func (g *edgeList) setUp(jobs base.Jobs) {
 	for jobIndex, job := range jobs {
 		for taskIndex := range job[1:] {
-			g.addEdge(jobs, jobIndex, taskIndex, jobIndex, taskIndex+1)
+			g.addEdge(jobs, int64(jobIndex), int64(taskIndex), int64(jobIndex), int64(taskIndex)+1)
 		}
 	}
 }
 
 func (g *edgeList) setUpMore(graph graph_state.DisjunctiveGraph, jobs base.Jobs) {
-	indexOfNextTask := make([]int, len(jobs))
+	indexOfNextTask := make([]int64, len(jobs))
 	for machine, jobSequence := range graph {
 		util.FillIntsWith(indexOfNextTask, -1)
 		job := jobSequence[0]
-		nodeTo, exist := nextTask(int(job), indexOfNextTask[job], machine, jobs)
+		nodeTo, exist := nextTask(int64(job), int64(indexOfNextTask[job]), int64(machine), jobs)
 		if !exist {
 			panic("no next node...")
 		}
-		indexOfNextTask[job] = nodeTo
+		indexOfNextTask[job] = int64(nodeTo)
 
 		for i, job := 0, jobSequence[0]; i < len(jobSequence)-1; i, job = i+1, jobSequence[i+1] {
 			nextJob := jobSequence[i+1]
-			nodeTo, exist := nextTask(int(nextJob), indexOfNextTask[nextJob], machine, jobs)
+			nodeTo, exist := nextTask(int64(nextJob), int64(indexOfNextTask[nextJob]), int64(machine), jobs)
 			if !exist {
 				panic("no next node...")
 			}
 
-			indexOfNextTask[nextJob] = nodeTo
-			if nodeFrom, nodeTo := g.getIndexes(jobs, int(job), indexOfNextTask[job], int(nextJob), indexOfNextTask[nextJob]);
+			indexOfNextTask[nextJob] = int64(nodeTo)
+			if nodeFrom, nodeTo := g.getIndexes(jobs, int64(job), int64(indexOfNextTask[job]), int64(nextJob), int64(indexOfNextTask[nextJob]));
 				nodeFrom == nodeTo {
 				continue
 			}
-			g.addEdge(jobs, int(job), indexOfNextTask[job], int(nextJob), indexOfNextTask[nextJob])
+			g.addEdge(jobs, int64(job), int64(indexOfNextTask[job]), int64(nextJob), int64(indexOfNextTask[nextJob]))
 		}
 		for _, job := range jobSequence {
 			indexOfNextTask[job]++
@@ -250,49 +250,49 @@ func (g *edgeList) setUpMore(graph graph_state.DisjunctiveGraph, jobs base.Jobs)
 	}
 }
 
-func updateNextTaskFor(indexOfNextTask []int, machine int, jobs base.Jobs) {
+func updateNextTaskFor(indexOfNextTask []int64, machine int64, jobs base.Jobs) {
 	for jobIndex, job := range jobs {
 		for taskIndex, task := range job {
-			if machine == int(task.Machine) && indexOfNextTask[jobIndex] < taskIndex {
-				indexOfNextTask[jobIndex] = taskIndex
+			if machine == int64(task.Machine) && indexOfNextTask[jobIndex] < int64(taskIndex) {
+				indexOfNextTask[jobIndex] = int64(taskIndex)
 				break
 			}
 		}
 	}
 }
 
-func nextTask(jobNumber, taskNumber, machine int, jobs base.Jobs) (nextTaskNumber int, exist bool) {
+func nextTask(jobNumber, taskNumber, machine int64, jobs base.Jobs) (nextTaskNumber int64, exist bool) {
 	for taskIndex, task := range jobs[jobNumber] {
-		if machine == int(task.Machine) && taskIndex > taskNumber {
-			nextTaskNumber = taskIndex
+		if machine == int64(task.Machine) && int64(taskIndex) > taskNumber {
+			nextTaskNumber = int64(taskIndex)
 			return nextTaskNumber, true
 		}
 	}
 
-	return -1, false
+	return math.MaxInt64, false
 }
 
-func node(jobs base.Jobs, job int, task int) string {
-	return strconv.Itoa(indexOf(jobs, job, task))
+func node(jobs base.Jobs, job int64, task int64) string {
+	return strconv.Itoa(int(indexOf(jobs, job, task)))
 }
 
-func indexOf(jobs base.Jobs, job int, task int) int {
-	return jobs.TaskNumber(job) + task
+func indexOf(jobs base.Jobs, job int64, task int64) int64 {
+	return int64(jobs.TaskNumber(uint64(job))) + task
 }
 
-func toJobAndTask(jobs base.Jobs, index int) (job, task int) {
+func toJobAndTask(jobs base.Jobs, index int64) (job, task int64) {
 	job = numberOfJob(jobs, index)
-	task = index - jobs.TaskNumber(job)
+	task = index - int64(jobs.TaskNumber(uint64(job)))
 
 	return
 }
 
-func numberOfJob(jobs base.Jobs, index int) (job int) {
+func numberOfJob(jobs base.Jobs, index int64) (job int64) {
 	for jobIndex := range jobs {
-		if jobs.TaskNumber(jobIndex) > index {
-			return jobIndex - 1
+		if jobs.TaskNumber(uint64(jobIndex)) > uint64(index) {
+			return int64(jobIndex - 1)
 		}
 	}
 
-	return len(jobs) - 1
+	return int64(len(jobs) - 1)
 }

@@ -2,7 +2,7 @@ package base
 
 type Job []Task
 
-func (job *Job) TotalTime() (total int) {
+func (job *Job) TotalTime() (total uint64) {
 	for _, task := range *job {
 		total += task.Time
 	}
@@ -10,6 +10,6 @@ func (job *Job) TotalTime() (total int) {
 	return
 }
 
-func (job *Job) TaskNumber() int {
-	return len(*job)
+func (job *Job) TaskNumber() uint64 {
+	return uint64(len(*job))
 }

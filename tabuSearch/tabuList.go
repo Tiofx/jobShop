@@ -2,6 +2,7 @@ package tabuSearch
 
 import (
 	. "github.com/Tiofx/jobShop/tabuSearch/neighborhood"
+	"math"
 )
 
 type TabuList interface {
@@ -12,18 +13,18 @@ type TabuList interface {
 }
 
 type tabuList struct {
-	memoryCapacity int
+	memoryCapacity uint64
 	list           []Move
 }
 
-func (tabu *tabuList) IndexOf(move Move) (index int, exist bool) {
+func (tabu *tabuList) IndexOf(move Move) (index uint64, exist bool) {
 	for i, tabuMove := range tabu.list {
 		if move == tabuMove {
-			return i, true
+			return uint64(i), true
 		}
 	}
 
-	return -1, false
+	return math.MaxUint64, false
 }
 
 func (tabu *tabuList) Contain(move Move) bool {
@@ -38,7 +39,7 @@ func (tabu *tabuList) Contain(move Move) bool {
 func (tabu *tabuList) Add(move Move) {
 	tabu.list = append(tabu.list, move)
 
-	if len(tabu.list) > tabu.memoryCapacity {
+	if uint64(len(tabu.list)) > tabu.memoryCapacity {
 		tabu.ForgetOldest()
 	}
 }

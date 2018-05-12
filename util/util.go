@@ -5,21 +5,35 @@ import (
 	"github.com/fighterlyt/permutation"
 )
 
-func Max(x, y int) int {
+func Max(x, y uint64) uint64 {
 	if x > y {
 		return x
 	}
 	return y
 }
 
-func Min(x, y int) int {
+func Min(x, y uint64) uint64 {
 	if x < y {
 		return x
 	}
 	return y
 }
 
-func MinMax(arr []int) (min, max int) {
+func MaxInt64(x, y int64) int64 {
+	if x > y {
+		return x
+	}
+	return y
+}
+
+func MinInt64(x, y int64) int64 {
+	if x < y {
+		return x
+	}
+	return y
+}
+
+func MinMax(arr []uint64) (min, max uint64) {
 	min = arr[0]
 	max = arr[0]
 
@@ -34,7 +48,7 @@ func MinMax(arr []int) (min, max int) {
 	return
 }
 
-func MaxOf(arr []int) (max int) {
+func MaxOf(arr []uint64) (max uint64) {
 	max = arr[0]
 
 	for _, v := range arr {
@@ -46,8 +60,8 @@ func MaxOf(arr []int) (max int) {
 	return
 }
 
-func MakeArrayOf(element, size int) []int {
-	array := make([]int, size)
+func MakeArrayOf(element, size uint64) []uint64 {
+	array := make([]uint64, size)
 
 	for i := range array {
 		array[i] = element
@@ -56,15 +70,15 @@ func MakeArrayOf(element, size int) []int {
 	return array
 }
 
-func Combination(upBound int) <-chan []int {
-	c := make(chan []int)
-	initArr := make([]int, upBound)
+func Combination(upBound uint64) <-chan []uint64 {
+	c := make(chan []uint64)
+	initArr := make([]uint64, upBound)
 
-	for i := 0; i < upBound; i++ {
+	for i := uint64(0); i < upBound; i++ {
 		initArr[i] = i
 	}
 
-	go func(consumer chan<- []int) {
+	go func(consumer chan<- []uint64) {
 		defer close(consumer)
 
 		p, err := permutation.NewPerm(initArr, nil)
@@ -74,7 +88,7 @@ func Combination(upBound int) <-chan []int {
 		}
 
 		for container, err := p.Next(); err == nil; container, err = p.Next() {
-			consumer <- container.([]int)
+			consumer <- container.([]uint64)
 		}
 
 		return
@@ -83,7 +97,7 @@ func Combination(upBound int) <-chan []int {
 	return c
 }
 
-func CompareIntSlices(a, b []int) bool {
+func CompareIntSlices(a, b []uint64) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -101,7 +115,13 @@ func CompareIntSlices(a, b []int) bool {
 	return true
 }
 
-func FillIntsWith(a []int, value int) {
+func FillIntsWith(a []int64, value int64) {
+	for i := range a {
+		a[i] = value
+	}
+}
+
+func FillUintsWith(a []uint64, value uint64) {
 	for i := range a {
 		a[i] = value
 	}

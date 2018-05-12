@@ -7,7 +7,7 @@ import (
 )
 
 type TaskInfo struct {
-	Job int
+	Job uint64
 	*Task
 }
 
@@ -15,20 +15,20 @@ type TaskInfoSet []TaskInfo
 
 type TaskWave []TaskInfoSet
 
-func (tw TaskWave) Add(job int, task *Task) {
+func (tw TaskWave) Add(job uint64, task *Task) {
 	currentTasks := tw[task.Machine]
 	tw[task.Machine] = append(currentTasks, TaskInfo{job, task})
 }
 
 func (tw TaskWave) GetBiggest() []TaskInfo {
 	var (
-		biggest        int
-		indexOfBiggest int
+		biggest        uint64
+		indexOfBiggest uint64
 	)
 
 	for machine, arr := range tw {
-		if currentLen := len(arr); currentLen > biggest {
-			indexOfBiggest = machine
+		if currentLen := uint64(len(arr)); currentLen > biggest {
+			indexOfBiggest = uint64(machine)
 			biggest = currentLen
 		}
 	}
@@ -51,8 +51,8 @@ func (s StateBy) NextTaskWave() TaskWave {
 
 	for i := range s.Jobs {
 		s := state.State(s)
-		if task, ok := s.NextTaskOf(i); ok {
-			tw.Add(i, task)
+		if task, ok := s.NextTaskOf(uint64(i)); ok {
+			tw.Add(uint64(i), task)
 		}
 	}
 

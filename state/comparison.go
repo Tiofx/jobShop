@@ -1,6 +1,6 @@
 package state
 
-func (s State) Compare(second State) int {
+func (s State) Compare(second State) int8 {
 	min, max := s.EstimateTime()
 	min2, max2 := second.EstimateTime()
 

@@ -1,5 +1,5 @@
 package state
 
-type JobTimeWave []int
+type JobTimeWave []uint64
 
-type MachineTimeWave []int
+type MachineTimeWave []uint64

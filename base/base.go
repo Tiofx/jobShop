@@ -1,5 +1,5 @@
 package base
 
 type Scheduler interface {
-	Makespan() int
+	Makespan() uint64
 }

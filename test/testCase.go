@@ -7,7 +7,7 @@ import (
 
 type testCase struct {
 	Filename                         string
-	JobsNumber, TasksNumber, Optimum int
+	JobsNumber, TasksNumber, Optimum uint64
 
 	base.Jobs
 }

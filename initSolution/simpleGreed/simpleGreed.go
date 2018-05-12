@@ -4,8 +4,8 @@ import (
 	"github.com/Tiofx/jobShop/state"
 )
 
-type job int
-type task int
+type job uint64
+type task uint64
 
 type TaskWave []*task
 
@@ -22,8 +22,8 @@ func (r *Resolver) IsBetterThan(second Resolver) bool {
 	return r.State.IsBetterThan(second.State)
 }
 
-func (r *Resolver) ExecuteBy(job int, task task) {
-	r.Execute(job, int(task))
+func (r *Resolver) ExecuteBy(job uint64, task task) {
+	r.Execute(job, uint64(task))
 }
 
 func (r *Resolver) Copy() Resolver {
@@ -33,7 +33,7 @@ func (r *Resolver) Copy() Resolver {
 func (r *Resolver) nextTaskWave() TaskWave {
 	tasks := make(TaskWave, len(r.Jobs))
 
-	for i := 0; i < len(r.Jobs); i++ {
+	for i := uint64(0); i < uint64(len(r.Jobs)); i++ {
 		if taskIndex, ok := r.NextTaskIndexOf(i); ok {
 			tasks.addTask(job(i), task(taskIndex))
 		}
@@ -60,14 +60,14 @@ func (r *Resolver) GreedChoice(tasks TaskWave) Resolver {
 		}
 
 		task := *task
-		r.ExecuteBy(job, task)
+		r.ExecuteBy(uint64(job), task)
 
 		if best == nil {
 			best = &copy
-			best.ExecuteBy(job, task)
+			best.ExecuteBy(uint64(job), task)
 		} else if r.IsBetterThan(*best) {
 			best.Undo()
-			best.ExecuteBy(job, task)
+			best.ExecuteBy(uint64(job), task)
 		}
 
 		r.Undo()

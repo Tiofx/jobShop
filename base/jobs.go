@@ -2,7 +2,7 @@ package base
 
 type Jobs []Job
 
-func (jobs *Jobs) MachineNumber() int {
+func (jobs *Jobs) MachineNumber() uint64 {
 	var maxMachineNumber Machine
 
 	for _, job := range *jobs {
@@ -13,10 +13,10 @@ func (jobs *Jobs) MachineNumber() int {
 		}
 	}
 
-	return int(maxMachineNumber) + 1
+	return uint64(maxMachineNumber) + 1
 }
 
-func (jobs *Jobs) TotalTaskNumber() (number int) {
+func (jobs *Jobs) TotalTaskNumber() (number uint64) {
 	for _, job := range *jobs {
 		number += job.TaskNumber()
 	}
@@ -24,13 +24,13 @@ func (jobs *Jobs) TotalTaskNumber() (number int) {
 	return
 }
 
-func (jobs *Jobs) TaskNumber(beforeJob int) (number int) {
+func (jobs *Jobs) TaskNumber(beforeJob uint64) (number uint64) {
 	if beforeJob < 0 {
 		return 0
 	}
 
 	for jobIndex, job := range *jobs {
-		if beforeJob == jobIndex {
+		if beforeJob == uint64(jobIndex) {
 			break
 		}
 		number += job.TaskNumber()
@@ -39,8 +39,8 @@ func (jobs *Jobs) TaskNumber(beforeJob int) (number int) {
 	return
 }
 
-func (jobs Jobs) EstimateTime() (min, max int) {
-	var total, maxJobTime int
+func (jobs Jobs) EstimateTime() (min, max uint64) {
+	var total, maxJobTime uint64
 
 	for _, job := range jobs {
 		jobTime := job.TotalTime()

@@ -6,26 +6,26 @@ import (
 	"fmt"
 )
 
-type job int
+type job uint64
 type jobSequence []job
 type DisjunctiveGraph []jobSequence
 
 type task struct {
 	job  job
-	task int
+	task uint64
 }
 type CriticalPath []task
 
 type State struct {
 	Jobs     base.Jobs
-	Executed []int
+	Executed []uint64
 	DisjunctiveGraph
 }
 
 func NewState(jobs base.Jobs, graph DisjunctiveGraph) State {
 	return State{
 		Jobs:             jobs,
-		Executed:         make([]int, jobs.MachineNumber()),
+		Executed:         make([]uint64, jobs.MachineNumber()),
 		DisjunctiveGraph: graph,
 	}
 }
@@ -34,20 +34,20 @@ func (s *State) ExecuteNextOf(machine base.Machine) {
 	s.Executed[machine]++
 }
 
-func (s *State) NextOf(machine base.Machine) int {
-	return int(s.DisjunctiveGraph[machine][s.Executed[machine]])
+func (s *State) NextOf(machine base.Machine) uint64 {
+	return uint64(s.DisjunctiveGraph[machine][s.Executed[machine]])
 }
 
-//func (s *State) Makespan() int {
+//func (s *State) Makespan() uint64 {
 //	return s.To().Makespan()
 //}
-func (graph DisjunctiveGraph) AddTo(machine base.Machine, nextJob int) {
+func (graph DisjunctiveGraph) AddTo(machine base.Machine, nextJob uint64) {
 	graph[machine] = append(graph[machine], job(nextJob))
 }
 
 func From(state state.State) (graph DisjunctiveGraph) {
 	graph = make(DisjunctiveGraph, state.Jobs.MachineNumber())
-	currentTaskNumber := make([]int, len(state.Jobs))
+	currentTaskNumber := make([]uint64, len(state.Jobs))
 
 	for _, job := range state.JobOrder {
 		task := state.Jobs[job][currentTaskNumber[job]]
@@ -59,12 +59,12 @@ func From(state state.State) (graph DisjunctiveGraph) {
 }
 
 func (s *State) To(jobState *state.State) (success bool) {
-	jobNumber := len(jobState.Jobs)
+	jobNumber := uint64(len(jobState.Jobs))
 
 	for !jobState.IsFinish() {
 		hasNoExecutedTaskDueIteration := true
 
-		for job := 0; job < jobNumber; job++ {
+		for job := uint64(0); job < jobNumber; job++ {
 			if task, ok := jobState.NextTaskOf(job); ok {
 				if s.NextOf(task.Machine) == job {
 					taskIndex, _ := jobState.NextTaskIndexOf(job)

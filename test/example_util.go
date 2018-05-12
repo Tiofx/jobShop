@@ -11,7 +11,7 @@ import (
 	"log"
 )
 
-func TabuSearch(permutationLimit, maxIterationNumber, maxWithoutImprovement, memoryCapacity int, tests ...testCase) Results{
+func TabuSearch(permutationLimit, maxIterationNumber, maxWithoutImprovement, memoryCapacity uint64, tests ...testCase) Results{
 	res := test(func(jobs base.Jobs) state.State {
 		initState := taskWaveByMachineGreed.Resolver{MaxTasksOnWave: permutationLimit, State: state.New(jobs)}
 		solution := initState.FindSolution()
