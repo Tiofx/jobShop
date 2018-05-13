@@ -8,9 +8,11 @@ import (
 	"github.com/Tiofx/jobShop/initSolution/taskWaveByMachineGreed"
 	"github.com/Tiofx/jobShop/tabuSearch"
 	"fmt"
+	"sync"
 )
 
 type SolverWithStatistic struct {
+	wg              sync.WaitGroup
 	improvementChan chan Snapshot
 	startTime       time.Time
 	stat            Snapshot
@@ -70,6 +72,15 @@ func (s *SolverWithStatistic) FindSolution() state.State {
 	}
 
 	return s.GetBest().JobState
+}
+
+func (s *SolverWithStatistic) WaitForProcessingStats() {
+	s.wg.Add(1)
+	s.wg.Wait()
+}
+
+func (s *SolverWithStatistic) FinishProcessingStats() {
+	s.wg.Done()
 }
 
 func (s *SolverWithStatistic) setUpSolver() {
