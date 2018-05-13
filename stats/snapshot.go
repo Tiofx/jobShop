@@ -6,9 +6,9 @@ import (
 )
 
 type Snapshot struct {
-	IterationNumber uint64
-	Makespan        uint64
-	TimeFromStart   time.Duration
+	IterationNumber uint64        `json:"iterationNumber"`
+	Makespan        uint64        `json:"makespan"`
+	TimeFromStart   time.Duration `json:"timeFromStart"`
 }
 
 func (s Snapshot) String() string {
