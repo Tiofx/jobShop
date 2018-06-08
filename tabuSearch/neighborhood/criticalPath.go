@@ -222,6 +222,9 @@ func (g *edgeList) setUp(jobs base.Jobs) {
 func (g *edgeList) setUpMore(graph graph_state.DisjunctiveGraph, jobs base.Jobs) {
 	indexOfNextTask := make([]int64, len(jobs))
 	for machine, jobSequence := range graph {
+		if len(jobSequence) == 0 {
+			continue
+		}
 		util.FillIntsWith(indexOfNextTask, -1)
 		job := jobSequence[0]
 		nodeTo, exist := nextTask(int64(job), int64(indexOfNextTask[job]), int64(machine), jobs)

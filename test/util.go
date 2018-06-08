@@ -74,6 +74,11 @@ func SimpleTestCase() testCase {
 	return From(jobs, 11)
 }
 
+func ProblematicTestCase() testCase {
+	jobs:=base.Jobs{base.Job{base.Task{Machine:0x0, Time:0x3}, base.Task{Machine:0x1, Time:0x2}, base.Task{Machine:0x1, Time:0x5}, base.Task{Machine:0x3, Time:0x2}}, base.Job{base.Task{Machine:0x0, Time:0x2}, base.Task{Machine:0x0, Time:0x4}, base.Task{Machine:0x3, Time:0x1}}, base.Job{base.Task{Machine:0x1, Time:0x4}, base.Task{Machine:0x1, Time:0x3}, base.Task{Machine:0x3, Time:0x4}}}
+	return From(jobs, 22)
+}
+
 func GeneralTestCase() testCase { return TestCaseNumber(0) }
 func ComplexTestCase() testCase { return TestCaseNumber(2) }
 func RandomTest() testCase      { return TestCaseNumber(uint64(rand.Intn(int(testsNumber())))) }
